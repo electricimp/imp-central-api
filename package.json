@@ -1,0 +1,33 @@
+{
+  "name": "imp-central-api",
+  "version": "1.0.0",
+  "description": "Electric Imp Central API v5 Client",
+  "main": "index.js",
+  "scripts": {
+    "test": "jasmine"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/electricimp/imp-central-api.git"
+  },
+  "keywords": [
+    "electric",
+    "imp",
+    "central",
+    "api",
+    "v5"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/electricimp/imp-central-api/issues"
+  },
+  "homepage": "https://github.com/electricimp/imp-central-api",
+  "devDependencies": {
+    "jasmine": "^2.4.1",
+    "jasmine-expect": "^2.0.2"
+  },
+  "dependencies": {
+    "request": "^2.69.0",
+    "eventsource": "^1.0.2"
+  }
+}
