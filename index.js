@@ -28,4 +28,5 @@ module.exports.DeviceGroups = require('./lib/DeviceGroups');
 module.exports.Devices = require('./lib/Devices');
 module.exports.Products = require('./lib/Products');
 module.exports.LogStreams = require('./lib/LogStreams');
+module.exports.Webhooks = require('./lib/Webhooks');
 module.exports.Errors = require('./lib/Errors');
