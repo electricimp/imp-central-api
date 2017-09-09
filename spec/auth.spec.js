@@ -33,7 +33,7 @@ const config = require('./config');
 
 describe('impCentralAPI.auth test suite', () => {
     let impCentralApi = util.impCentralApi;
-    let accountId;
+    let refreshTokenId;
 
     it('should refresh access token', (done) => {
         impCentralApi.auth.login(config.email, config.password).
@@ -123,5 +123,52 @@ describe('impCentralAPI.auth test suite', () => {
                 }
                 done();
             });
+    });
+
+    it('should get refresh tokens', (done) => {
+        impCentralApi.auth.getRefreshTokens().
+            then((res) => {
+                expect(res.data.length).toBeGreaterThan(0);
+                if (res.data.length > 0) {
+                    refreshTokenId = res.data[0].id;
+                }
+                done();
+            }).
+            catch((error) => {
+                done.fail(error);
+            });
+    });
+
+    it('should delete refresh token', (done) => {
+        if (refreshTokenId) {
+            impCentralApi.auth.deleteRefreshToken(refreshTokenId).
+                then((res) => {
+                    done();
+                }).
+                catch((error) => {
+                    done.fail(error);
+                });
+        }
+        else {
+            done();
+        }
+    });
+
+    it('should not delete refresh token with empty id', (done) => {
+        if (refreshTokenId) {
+            impCentralApi.auth.deleteRefreshToken('').
+                then((res) => {
+                    done.fail('delete refresh token with empty id');
+                }).
+                catch((error) => {
+                    if (!(error instanceof Errors.InvalidDataError)) {
+                        done.fail('unexpected error');
+                    }
+                    done();
+                });
+        }
+        else {
+            done();
+        }
     });
 });
