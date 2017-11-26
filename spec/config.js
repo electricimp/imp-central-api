@@ -22,8 +22,6 @@
 // ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // OTHER DEALINGS IN THE SOFTWARE.
 
-// Copy this file to "config.js" and fill it with settings for running tests
-
 'use strict';
 
 exports.email = process.env.IMP_CENTRAL_USER_EMAIL;
