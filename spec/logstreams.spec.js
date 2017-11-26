@@ -278,20 +278,7 @@ describe('impCentralAPI.logStreams test suite', () => {
         else {
             done();
         }
-    });
-
-    it('should restart a device', (done) => {
-        if (deviceId) {
-            impCentralApi.devices.restart(deviceId).then(() => {
-                done();
-            }).catch((error) => {
-                done.fail(error);
-            });
-        }
-        else {
-            done();
-        }
-    });
+    }, util.TIMEOUT * 3);
 
     it('should remove device by MAC address from a json logstream', (done) => {
         if (deviceId) {
@@ -306,7 +293,7 @@ describe('impCentralAPI.logStreams test suite', () => {
         else {
             done();
         }
-    });
+    }, util.TIMEOUT * 3);
 
     it('should add device by Agent ID to a json logstream', (done) => {
         if (deviceId) {
@@ -324,6 +311,19 @@ describe('impCentralAPI.logStreams test suite', () => {
         }
     }, util.TIMEOUT * 3);
 
+    it('should restart a device', (done) => {
+        if (deviceId) {
+            impCentralApi.devices.restart(deviceId).then(() => {
+                done();
+            }).catch((error) => {
+                done.fail(error);
+            });
+        }
+        else {
+            done();
+        }
+    });
+
     it('should remove device by Agent ID from a json logstream', (done) => {
         if (deviceId) {
             impCentralApi.logStreams.removeDevice(jsonLogStreamId, deviceAgentId).
@@ -337,7 +337,7 @@ describe('impCentralAPI.logStreams test suite', () => {
         else {
             done();
         }
-    }, util.TIMEOUT);
+    }, util.TIMEOUT * 3);
 
     it('should remove devices from a specific device group', (done) => {
         if (deviceId) {

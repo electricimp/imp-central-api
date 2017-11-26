@@ -296,7 +296,7 @@ describe('impCentralAPI.device_groups test suite', () => {
             catch((error) => {
                 done.fail(error);
             });
-    });
+    }, util.TIMEOUT * 3);
 
     it('should add devices by MAC address to a specific device group', (done) => {
         let devices = devicesInfo.map(deviceInfo => deviceInfo.attributes.mac_address);
@@ -317,7 +317,7 @@ describe('impCentralAPI.device_groups test suite', () => {
             catch((error) => {
                 done.fail(error);
             });
-    });
+    }, util.TIMEOUT * 3);
 
     it('should remove devices by Agent ID from a specific device group', (done) => {
         let devices = devicesInfo.map(deviceInfo => deviceInfo.attributes.agent_id);
@@ -328,7 +328,7 @@ describe('impCentralAPI.device_groups test suite', () => {
             catch((error) => {
                 done.fail(error);
             });
-    }, util.TIMEOUT);
+    }, util.TIMEOUT * 3);
 
     it('should add devices by Agent ID to a specific device group', (done) => {
         let devices = devicesInfo.map(deviceInfo => deviceInfo.attributes.agent_id);
@@ -349,7 +349,7 @@ describe('impCentralAPI.device_groups test suite', () => {
             catch((error) => {
                 done.fail(error);
             });
-    }, util.TIMEOUT);
+    }, util.TIMEOUT * 3);
 
     it('should remove devices from a specific device group', (done) => {
         impCentralApi.deviceGroups.removeDevices(deviceGroupId, null, ...Object.keys(devices)).

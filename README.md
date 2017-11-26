@@ -206,7 +206,7 @@ Library Class: [Webhooks](./lib/Webhooks.js)
 ```javascript
 const ImpCentralApi = require('imp-central-api');
 const Errors = ImpCentralApi.Errors;
-const impCentralApi = new ImpCentralApi('https://api.ei.run/v5');
+const impCentralApi = new ImpCentralApi('https://api.electricimp.com/v5');
 
 let token;
 impCentralApi.auth.login('<user email for Electric Imp Account>', 
