@@ -1,24 +1,16 @@
 # Electric Imp impCentral API (v5) JavaScript library
 
-This library is a JavaScript wrapper for the [Electric Imp impCentral API (v5)](https://preview-apidoc.electricimp.com). **TODO: change the link to the final one**
-
-It's main purpose is to support development processes. The library is not intended for factory and production processes.
+This library is a JavaScript (Node.js) wrapper for the [Electric Imp impCentral API (v5)](https://preview-apidoc.electricimp.com). **TODO: change the link to the final one**
 
 ## Library Usage
 
 Using the library you are doing:
-
-- the library installation
-
-- the library instantiation
-
-- initializing the library by an access token
-
-- calling impCentral API methods
-
-- processing results
-
-- processing errors
+- the library installation,
+- the library instantiation,
+- initializing the library by an access token,
+- calling impCentral API methods,
+- processing results,
+- processing errors.
 
 All these steps are described in the following sections.
 
@@ -36,11 +28,11 @@ npm install -g imp-central-api
 
 To instantiate this library you need to call [ImpCentralApi class](./lib/ImpCentralApi.js) constructor.
 
-By default the library works with the following impCentral API base endpoint: **TODO: add the final link**
+By default the library works with the following impCentral API base endpoint: [https://api.electricimp.com/v5](https://api.electricimp.com/v5) **TODO: check if the link is final**
 
-You can optionally pass to the constructor an alternative impCentral API base endpoint. This can be used to connect to private impCloud installations.
+You can optionally pass to the constructor an alternative impCentral API base endpoint. This can be used to connect to private impCloud installations. *apiEndpoint()* getter of the [ImpCentralApi class](./lib/ImpCentralApi.js) can be used to obtain impCentral API base endpoint used by the instance of ImpCentralApi class.
 
-After instantiation use *ImpCentralApi* property getters to obtain the subclasses which provide methods to access impCentral API.
+After instantiation use [ImpCentralApi class](./lib/ImpCentralApi.js) property getters to obtain the subclasses which provide methods to access impCentral API.
 
 ```javascript
 const ImpCentralApi = require('imp-central-api');
@@ -60,8 +52,6 @@ Access to almost every endpoint in impCentral API requires authorization. Author
 - if you have a login key: use *getAccessToken()* with login key;
 - alternatively, use *login()* method with identifier/password pair and, additionally, if Two-Factor authentication is enabled for your account, *loginWithOtp()* method with one-time password. Login methods allow to obtain the both - an access token and a refresh token.
 
-**TODO: leave only the finally supported methods**
-
 Remember, when access token is expired any call of impCentral API returns 401 error. You need to re-initialize the library by a new access token using one of the above methods.
 
 For more information see [impCentral API: Auth](https://preview-apidoc.electricimp.com/#tag/Auth) **TODO: change the link to the final one**
@@ -70,14 +60,13 @@ For more information see [impCentral API: Auth](https://preview-apidoc.electrici
 
 This library is a JavaScript wrapper for impCentral API.
 
-[Accounts](./lib/Accounts.js), [Products](./lib/Products.js), [DeviceGroups](./lib/DeviceGroups.js), [Devices](./lib/Devices.js), [Deployments](./lib/Deployments.js), [LogStreams](./lib/LogStreams.js) classes of the library map to the corresponding groups in impCentral API. Interface methods of these classes mostly map one to one to the corresponding methods of impCentral API.
+[Accounts](./lib/Accounts.js), [Auth](./lib/Auth.js), [Deployments](./lib/Deployments.js), [DeviceGroups](./lib/DeviceGroups.js), [Devices](./lib/Devices.js), [LogStreams](./lib/LogStreams.js), [Products](./lib/Products.js), [Webhooks](./lib/Webhooks.js) classes of the library map to the corresponding groups of impCentral API. Interface methods of these classes mostly map one to one to the corresponding methods of impCentral API.
 
-See **impCentral API Coverage** section below for the list of the supported impCentral API methods.
+See [impCentral API Coverage](#impcentral-api-coverage) section below for the list of the supported impCentral API methods.
 
 ### Results Processing
 
 All requests to impCentral API are made asynchronously via Promises. Any method which sends a request returns a Promise:
-
 - if operation succeeds, the Promise resolves with HTTP response body;
 - if operation fails, the Promise rejects with an error.
 
@@ -87,22 +76,22 @@ The exact format of HTTP response body for every request can be found in [Electr
 
 ### Errors Processing
 
-[Error classes](./lib/Errors.js) define two types of errors returned by the library.
+[Error classes](./lib/Errors.js) define two types of errors returned by the library:
 
 - *InvalidDataError* - indicates that the library detects one of the following errors:
   - the library is wrongly initialized. E.g. access token is not provided or obtained;
   - the library method is called with invalid argument(s);
-  - internal library problem(s).
+  - internal library problem(s).  
   
-  The error details can be found in the message property.
-  
+  The error details can be found in the message property.  
   These errors usually happen during an application development. Usually they should be fixed during debugging and therefore should not occur after the application has been deployed.
 
-- *ImpCentralApiError* - Indicates that HTTP request to impCentral API failed.
+- *ImpCentralApiError* - Indicates that HTTP request to impCentral API failed.  
 
-  The error details can be found in the message, statusCode and body properties. The exact body format is described in [impCentral API: Error Handling](https://preview-apidoc.electricimp.com/#section/Error-Handling) **TODO: change the link to the final one**
-  
+  The error details can be found in the message, statusCode and body properties. The exact body format is described in [impCentral API: Error Handling](https://preview-apidoc.electricimp.com/#section/Error-Handling) **TODO: change the link to the final one**  
   This error may occur during the normal execution of an application.
+  
+Use *debug(value)* setter of the [ImpCentralApi class](./lib/ImpCentralApi.js) to enable (*value = true*) or disable (*value = false*) the library debug output (including errors logging). Disabled by default (after the library instantiation).
 
 ## impCentral API Coverage
 
@@ -116,9 +105,12 @@ Library Class: [Accounts](./lib/Accounts.js)
 
 | impCentral API Functionality | Library Method(s) |
 | ---------------------------- | ----------------- |
-| Retrieve account information | *accounts.get()* |
-| Create an Account | Not supported |
-| Verify an Email Address and Finalize an Account | Not supported |
+| Retrieve account information (**TODO: not publicly specified yet**) | *accounts.get()* |
+| Retrieve Login Keys | *accounts.listLoginKeys()* |
+| Create a Login Key | *accounts.createLoginKey()* |
+| Retrieve a Login Key | *accounts.getLoginKey()* |
+| Delete a Login Key | *accounts.deleteLoginKey()* |
+| Update a Login Key | *accounts.updateLoginKey()* |
 
 ### [impCentral API: Auth](https://preview-apidoc.electricimp.com/accounts.html#tag/Auth)
 
@@ -127,26 +119,25 @@ Library Class: [Auth](./lib/Auth.js)
 | impCentral API Functionality | Library Method(s) |
 | ---------------------------- | ----------------- |
 | Authenticate and Retrieve an Access Token | *auth.login()*, *auth.loginWithOTP()* |
-| Exchange a refresh token or login key for an Access Token | *auth.refreshAccessToken()*, *auth.getAccessToken()* |
+| Exchange a refresh token or a login key for an Access Token | *auth.refreshAccessToken()*, *auth.getAccessToken()* |
+| Retrieve Refresh Tokens | *auth.getRefreshTokens()* |
+| Delete a Refresh Token | *auth.deleteRefreshToken()* |
 
-### [impCentral API: Products](https://preview-apidoc.electricimp.com/#tag/Products)
+### [impCentral API: Deployments](https://preview-apidoc.electricimp.com/#tag/Deployments)
 
-Library Class: [Products](./lib/Products.js)
+Library Class: [Deployments](./lib/Deployments.js)
 
 | impCentral API Functionality | Library Method(s) |
 | ---------------------------- | ----------------- |
-| List existing Products | *products.list()* |
-| Create a Product | *products.create()* |
-| Retrieve a specific Product | *products.get()* |
-| Update a specific Product | *products.update()* |
-| Delete a specific Product | *products.delete()* |
-| Update a specific Webhook | Not supported (Factory/Production feature) |
+| List the account's Deployment history | *deployments.list()* |
+| Create a Deployment | *deployments.create()* |
+| Get a specific Deployment | *deployments.get()* |
+| Update a specific Deployment | *deployments.update()* |
+| Delete a Deployment | *deployments.delete()* |
 
 ### [impCentral API: Device Groups](https://preview-apidoc.electricimp.com/#tag/DeviceGroups)
 
 Library Class: [DeviceGroups](./lib/DeviceGroups.js)
-
-Only *'development_devicegroup'* type is accepted as an argument in device group creation/update. Factory/Production related parameters are ignored.
 
 | impCentral API Functionality | Library Method(s) |
 | ---------------------------- | ----------------- |
@@ -161,48 +152,50 @@ Only *'development_devicegroup'* type is accepted as an argument in device group
 
 ### [impCentral API: Devices](https://preview-apidoc.electricimp.com/#tag/Devices)
 
-Library Classes: [Devices](./lib/Devices.js), [DeviceGroups](./lib/DeviceGroups.js)
+Library Class: [Devices](./lib/Devices.js)
 
 | impCentral API Functionality | Library Method(s) |
 | ---------------------------- | ----------------- |
-| Assign one or more devices to a Device Group | *deviceGroups.addDevices()* |
-| Remove one or more devices from a Device Group |  *deviceGroups.removeDevices()* |
 | List the Devices owned by the Account | *devices.list()* |
 | Get a specific Device | *devices.get()* |
 | Remove a specific device from the account | *devices.delete()* |
 | Update a Device | *devices.update()* |
 | Restart a Device | *devices.restart()* |
-
-### [impCentral API: Deployments](https://preview-apidoc.electricimp.com/#tag/Deployments)
-
-Library Class: [Deployments](./lib/Deployments.js)
-
-| impCentral API Functionality | Library Method(s) |
-| ---------------------------- | ----------------- |
-| List the account's Deployment history | *deployments.list()* |
-| Create a Deployment | *deployments.create()* |
-| Get a specific Deployment | *deployments.get()* |
-| Update a specific Deployment | *deployments.update()* |
-| Delete a Deployment | *deployments.delete()* |
+| Get historical logs for a specific Device | *devices.getLogs()* |
 
 ### [impCentral API: Logs](https://preview-apidoc.electricimp.com/#tag/Logs)
 
-Library Classes: [LogStreams](./lib/LogStreams.js), [Devices](./lib/Devices.js)
+Library Class: [LogStreams](./lib/LogStreams.js)
 
 | impCentral API Functionality | Library Method(s) |
 | ---------------------------- | ----------------- |
-| Get historical logs for a specific Device | *devices.getLogs()* |
 | Request a new logstream, Retrieve logs from a Logstream | *logStreams.create()* |
 | Add a device to a Logstream | *logStreams.addDevice()* |
 | Remove a device from a Logstream | *logStreams.removeDevice()* |
 
+### [impCentral API: Products](https://preview-apidoc.electricimp.com/#tag/Products)
+
+Library Class: [Products](./lib/Products.js)
+
+| impCentral API Functionality | Library Method(s) |
+| ---------------------------- | ----------------- |
+| List existing Products | *products.list()* |
+| Create a Product | *products.create()* |
+| Retrieve a specific Product | *products.get()* |
+| Update a specific Product | *products.update()* |
+| Delete a specific Product | *products.delete()* |
+
 ### [impCentral API: Webhooks](https://preview-apidoc.electricimp.com/#tag/Webhooks)
 
-Not supported (Factory/Production feature).
+Library Class: [Webhooks](./lib/Webhooks.js)
 
-### impCentral API: Collaboration
-
-Not supported by impCentral API yet.
+| impCentral API Functionality | Library Method(s) |
+| ---------------------------- | ----------------- |
+| List existing Webhooks | *webhooks.list()* |
+| Create a Webhook | *webhooks.create()* |
+| Retrieve a Webhook | *webhooks.get()* |
+| Update a specific Webhook | *webhooks.update()* |
+| Delete a specific Webhook | *webhooks.delete()* |
 
 ## Examples
 
@@ -213,7 +206,7 @@ Not supported by impCentral API yet.
 ```javascript
 const ImpCentralApi = require('imp-central-api');
 const Errors = ImpCentralApi.Errors;
-const impCentralApi = new ImpCentralApi('https://api.ei.run/v5');
+const impCentralApi = new ImpCentralApi('https://api.electricimp.com/v5');
 
 let token;
 impCentralApi.auth.login('<user email for Electric Imp Account>', 
@@ -334,5 +327,3 @@ impCentralApi.logStreams.create(logMessage, logState).then(logStream => {
 ## License
 
 This library is licensed under the [MIT License](./LICENSE).
-
-## Release History ?

@@ -22,11 +22,9 @@
 // ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // OTHER DEALINGS IN THE SOFTWARE.
 
-module.exports = require('./lib/ImpCentralApi');
-module.exports.Deployments = require('./lib/Deployments');
-module.exports.DeviceGroups = require('./lib/DeviceGroups');
-module.exports.Devices = require('./lib/Devices');
-module.exports.Products = require('./lib/Products');
-module.exports.LogStreams = require('./lib/LogStreams');
-module.exports.Webhooks = require('./lib/Webhooks');
-module.exports.Errors = require('./lib/Errors');
+'use strict';
+
+exports.email = process.env.IMP_CENTRAL_USER_EMAIL;
+exports.password = process.env.IMP_CENTRAL_USER_PASSWORD;
+exports.debug = process.env.IMP_CENTRAL_API_DEBUG === 'true' || process.env.IMP_CENTRAL_API_DEBUG === '1';
+exports.apiEndpoint = process.env.IMP_CENTRAL_API_ENDPOINT;

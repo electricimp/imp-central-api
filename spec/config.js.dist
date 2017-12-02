@@ -26,7 +26,7 @@
 
 'use strict';
 
-exports.email = process.env.IMP_USER_EMAIL;
-exports.password = process.env.IMP_USER_PASSWORD;
+exports.email = process.env.IMP_CENTRAL_USER_EMAIL;
+exports.password = process.env.IMP_CENTRAL_USER_PASSWORD;
 exports.debug = process.env.IMP_CENTRAL_API_DEBUG === 'true' || process.env.IMP_CENTRAL_API_DEBUG === '1';
-exports.apiEndpoint = process.env.IMP_API_ENDPOINT;
+exports.apiEndpoint = process.env.IMP_CENTRAL_API_ENDPOINT;
