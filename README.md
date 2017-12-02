@@ -81,25 +81,25 @@ The exact format of HTTP response body for every request can be found in [Electr
 - *InvalidDataError* - indicates that the library detects one of the following errors:
   - the library is wrongly initialized. E.g. access token is not provided or obtained;
   - the library method is called with invalid argument(s);
-  - internal library problem(s).  
-  
-  The error details can be found in the message property.  
+  - internal library problem(s).
+
+  The error details can be found in the message property.
   These errors usually happen during an application development. Usually they should be fixed during debugging and therefore should not occur after the application has been deployed.
 
-- *ImpCentralApiError* - Indicates that HTTP request to impCentral API failed.  
+- *ImpCentralApiError* - Indicates that HTTP request to impCentral API failed.
 
-  The error details can be found in the message, statusCode and body properties. The exact body format is described in [impCentral API: Error Handling](https://preview-apidoc.electricimp.com/#section/Error-Handling) **TODO: change the link to the final one**  
+  The error details can be found in the message, statusCode and body properties. The exact body format is described in [impCentral API: Error Handling](https://preview-apidoc.electricimp.com/#section/Error-Handling) **TODO: change the link to the final one**
   This error may occur during the normal execution of an application.
-  
+
 Use *debug(value)* setter of the [ImpCentralApi class](./lib/ImpCentralApi.js) to enable (*value = true*) or disable (*value = false*) the library debug output (including errors logging). Disabled by default (after the library instantiation).
 
 ## impCentral API Coverage
 
 **TODO: update according to the final impCentral API list of functionality**
 
-**TODO: change impCentral links to the final ones** 
+**TODO: change impCentral links to the final ones**
 
-### [impCentral API: Accounts](https://preview-apidoc.electricimp.com/accounts.html#tag/Accounts)
+### [impCentral API: Accounts](https://preview-apidoc.electricimp.com/#tag/Accounts)
 
 Library Class: [Accounts](./lib/Accounts.js)
 
@@ -112,7 +112,7 @@ Library Class: [Accounts](./lib/Accounts.js)
 | Delete a Login Key | *accounts.deleteLoginKey()* |
 | Update a Login Key | *accounts.updateLoginKey()* |
 
-### [impCentral API: Auth](https://preview-apidoc.electricimp.com/accounts.html#tag/Auth)
+### [impCentral API: Auth](https://preview-apidoc.electricimp.com/#tag/Auth)
 
 Library Class: [Auth](./lib/Auth.js)
 
@@ -209,7 +209,7 @@ const Errors = ImpCentralApi.Errors;
 const impCentralApi = new ImpCentralApi('https://api.electricimp.com/v5');
 
 let token;
-impCentralApi.auth.login('<user email for Electric Imp Account>', 
+impCentralApi.auth.login('<user email for Electric Imp Account>',
                          '<user password for Electric Imp Account>').then(result => {
     token = result.access_token;
 }).catch(error => {
@@ -234,7 +234,7 @@ const DeviceGroups = ImpCentralApi.DeviceGroups;
 
 const impCentralApi = new ImpCentralApi();
 
-// the library can be initialized by non-expired access token if exists 
+// the library can be initialized by non-expired access token if exists
 // (e.g. saved after the previous usage of the library)
 impCentralApi.auth.accessToken = token;
 
@@ -243,7 +243,7 @@ let accountId;
 impCentralApi.accounts.get('me').then(account => {
     accountId = account.data.id;
     // create a product
-    // accountId is optional parameter, if not provided, 
+    // accountId is optional parameter, if not provided,
     // product will be assigned to the acting user
     return impCentralApi.products.create({ name : 'test_product'}, accountId);
 }).then(product => {
@@ -293,7 +293,7 @@ let pageSize = 10;
 impCentralApi.devices.getLogs(deviceId, pageNumber, pageSize).then(logs => {
     for (let log of logs.data) {
         console.log(log.ts + ': '+ log.msg);
-    }    
+    }
 }).catch(error => {
     console.log(error);
 });
