@@ -1,10 +1,10 @@
 # The Electric Imp impCentral&trade; API JavaScript Library #
 
-This library is a JavaScript (Node.js) wrapper for the [impCentral API](https://preview-apidoc.electricimp.com). **TODO: change the link to the final one**
+*imp-central-api* is a JavaScript (Node.js) wrapper for the [impCentral API](https://preview-apidoc.electricimp.com). **TODO: change the link to the final one**
 
 ## Library Usage ##
 
-To use the impCentral API library, you will need to:
+To use *imp-central-api*, you will need to:
 
 - Install Node.js and the library.
 - Instantiate the library.
@@ -27,7 +27,7 @@ npm install -g imp-central-api
 
 To instantiate this library, call the [ImpCentralApi class](./lib/ImpCentralApi.js) constructor.
 
-By default, the library works with the following impCentral API base endpoint: *https://api.electricimp.com/v5*. You can optionally pass an alternative impCentral API base endpoint into the constructor. This can be used to connect to Private impCloud™ installations. The method *apiEndpoint()* can be used to obtain the current impCentral API base endpoint.
+By default, *imp-central-api* works with the following impCentral API base endpoint: *https://api.electricimp.com/v5*. You can optionally pass an alternative impCentral API base endpoint into the constructor. This can be used to connect to Private impCloud™ installations. The class method *apiEndpoint()* can be used to obtain the current impCentral API base endpoint.
 
 After instantiation, use [ImpCentralApi class](./lib/ImpCentralApi.js) methods to obtain the subclasses which provide the methods you will use to access specific impCentral API resources. For example:
 
@@ -50,13 +50,13 @@ Access to almost every impCentral API endpoint requires authorization: you must 
 
 The login methods will return both a new access token and a refresh token.
 
-For more information see [impCentral API: Auth](https://preview-apidoc.electricimp.com/#tag/Auth) **TODO: change the link to the final one**
+For more information, please see the impCentral API documentation](https://preview-apidoc.electricimp.com/#tag/Auth). **TODO: change the link to the final one**
 
 ### impCentral API Calls ###
 
 The [Accounts](./lib/Accounts.js), [Auth](./lib/Auth.js), [Deployments](./lib/Deployments.js), [DeviceGroups](./lib/DeviceGroups.js), [Devices](./lib/Devices.js), [LogStreams](./lib/LogStreams.js), [Products](./lib/Products.js) and [Webhooks](./lib/Webhooks.js) library classes map to the corresponding impCentral API resources. These classes' methods typically map directly to the corresponding impCentral API endpoints.
 
-See [impCentral API Coverage](#impcentral-api-coverage) section below for a list of the supported impCentral API endpoints.
+See the [impCentral API Coverage](#impcentral-api-coverage) section below for a list of the supported impCentral API endpoints.
 
 ### Result Processing ###
 
@@ -82,7 +82,7 @@ The exact format of HTTP response body for every request can be found in [here](
   These errors usually happen during an application development. Usually they should be fixed during debugging and therefore should not occur after the application has been deployed.
 
 - *ImpCentralApiError* Indicates that the request to the impCentral API failed.
-  The error details can be found in the *message*, *statusCode* and *body* properties. The exact body format is described in [impCentral API: Error Handling](https://preview-apidoc.electricimp.com/#section/Error-Handling) **TODO: change the link to the final one**
+  The error details can be found in the *message*, *statusCode* and *body* properties. The exact body format is described in the [impCentral API documentation](https://preview-apidoc.electricimp.com/#section/Error-Handling) **TODO: change the link to the final one**
   This error may occur during the normal execution of an application.
 
 Use the method *debug()* to enable (*debug(true)*) or disable (*debug(false)*) the library debug output (including error logging). This is disabled by default.
@@ -194,8 +194,6 @@ Library Class: [Webhooks](./lib/Webhooks.js)
 ## Examples ##
 
 1. Library initialization using email/password login:
-
-**TODO: change the url in the example to the final one**
 
 ```javascript
 const ImpCentralApi = require('imp-central-api');
