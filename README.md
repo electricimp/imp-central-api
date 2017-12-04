@@ -1,17 +1,17 @@
-# Electric Imp impCentral API (v5) JavaScript library #
+# The Electric Imp impCentral&trade; API JavaScript Library #
 
-This library is a JavaScript (Node.js) wrapper for the [Electric Imp impCentral&trade; API](https://preview-apidoc.electricimp.com). **TODO: change the link to the final one**
+This library is a JavaScript (Node.js) wrapper for the [impCentral API](https://preview-apidoc.electricimp.com). **TODO: change the link to the final one**
 
 ## Library Usage ##
 
 To use the impCentral API library, you will need to:
 
-- Install Node.js and the library
-- Instantiate the library
-- Initialize the library with an access token
-- Calling impCentral API endpoints
+- Install Node.js and the library.
+- Instantiate the library.
+- Initialize the library with an access token.
+- Calling impCentral API endpoints.
 - Process the results, or
-- Process and errors you encountered.
+- Process any errors you encountered.
 
 Each of these steps are described in the following sections.
 
@@ -29,13 +29,13 @@ To instantiate this library, call the [ImpCentralApi class](./lib/ImpCentralApi.
 
 By default, the library works with the following impCentral API base endpoint: *https://api.electricimp.com/v5*. You can optionally pass an alternative impCentral API base endpoint into the constructor. This can be used to connect to Private impCloud™ installations. The method *apiEndpoint()* can be used to obtain the current impCentral API base endpoint.
 
-After instantiation, use [ImpCentralApi class](./lib/ImpCentralApi.js) property getters to obtain the subclasses which provide methods to access impCentral API. For example:
+After instantiation, use [ImpCentralApi class](./lib/ImpCentralApi.js) methods to obtain the subclasses which provide the methods you will use to access specific impCentral API resources. For example:
 
 ```javascript
 const ImpCentralApi = require('imp-central-api');
 const impCentralApi = new ImpCentralApi();
-impCentralApi.auth.<auth_method()>;
-impCentralApi.products.<products_method()>;
+impCentralApi.auth.getAccessToken();
+impCentralApi.products.list();
 ```
 
 ### Access Authorization ###
