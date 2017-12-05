@@ -50,7 +50,7 @@ Access to almost every impCentral API endpoint requires authorization: you must 
 
 The login methods will return both a new access token and a refresh token.
 
-For more information, please see the impCentral API documentation](https://apidoc.electricimp.com/#tag/Auth).
+For more information, please see the [impCentral API documentation](https://apidoc.electricimp.com/#tag/Auth).
 
 ### impCentral API Calls ###
 
@@ -67,7 +67,7 @@ All requests are made asynchronously via Promises. Any method which sends a requ
 
 Your code needs to parse the returned HTTP response body.
 
-The exact format of HTTP response body for every request can be found in [here](https://apidoc.electricimp.com).
+The exact format of HTTP response body for every request can be found [here](https://apidoc.electricimp.com).
 
 ### Error Processing ###
 
