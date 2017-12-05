@@ -1,6 +1,6 @@
 # The Electric Imp impCentral&trade; API JavaScript Library #
 
-*imp-central-api* is a JavaScript (Node.js) wrapper for the [impCentral API](https://preview-apidoc.electricimp.com). **TODO: change the link to the final one**
+*imp-central-api* is a JavaScript (Node.js) wrapper for the [impCentral API](https://apidoc.electricimp.com).
 
 ## Library Usage ##
 
@@ -50,7 +50,7 @@ Access to almost every impCentral API endpoint requires authorization: you must 
 
 The login methods will return both a new access token and a refresh token.
 
-For more information, please see the impCentral API documentation](https://preview-apidoc.electricimp.com/#tag/Auth). **TODO: change the link to the final one**
+For more information, please see the impCentral API documentation](https://apidoc.electricimp.com/#tag/Auth).
 
 ### impCentral API Calls ###
 
@@ -67,7 +67,7 @@ All requests are made asynchronously via Promises. Any method which sends a requ
 
 Your code needs to parse the returned HTTP response body.
 
-The exact format of HTTP response body for every request can be found in [here](https://preview-apidoc.electricimp.com). **TODO: change the link to the final one**
+The exact format of HTTP response body for every request can be found in [here](https://apidoc.electricimp.com).
 
 ### Error Processing ###
 
@@ -82,7 +82,7 @@ The exact format of HTTP response body for every request can be found in [here](
   These errors usually happen during an application development. Usually they should be fixed during debugging and therefore should not occur after the application has been deployed.
 
 - *ImpCentralApiError* Indicates that the request to the impCentral API failed.
-  The error details can be found in the *message*, *statusCode* and *body* properties. The exact body format is described in the [impCentral API documentation](https://preview-apidoc.electricimp.com/#section/Error-Handling) **TODO: change the link to the final one**
+  The error details can be found in the *message*, *statusCode* and *body* properties. The exact body format is described in the [impCentral API documentation](https://apidoc.electricimp.com/#section/Error-Handling).
   This error may occur during the normal execution of an application.
 
 Use the method *debug()* to enable (*debug(true)*) or disable (*debug(false)*) the library debug output (including error logging). This is disabled by default.
@@ -91,9 +91,7 @@ Use the method *debug()* to enable (*debug(true)*) or disable (*debug(false)*) t
 
 **TODO: update according to the final impCentral API list of functionality**
 
-**TODO: change impCentral links to the final ones**
-
-### [Accounts](https://preview-apidoc.electricimp.com/#tag/Accounts) ###
+### [Accounts](https://apidoc.electricimp.com/#tag/Accounts) ###
 
 Library Class: [Accounts](./lib/Accounts.js)
 
@@ -106,7 +104,7 @@ Library Class: [Accounts](./lib/Accounts.js)
 | Delete a Login Key | *accounts.deleteLoginKey()* |
 | Update a Login Key | *accounts.updateLoginKey()* |
 
-### [impCentral API: Auth](https://preview-apidoc.electricimp.com/#tag/Auth) ###
+### [impCentral API: Auth](https://apidoc.electricimp.com/#tag/Auth) ###
 
 Library Class: [Auth](./lib/Auth.js)
 
@@ -117,7 +115,7 @@ Library Class: [Auth](./lib/Auth.js)
 | Retrieve Refresh Tokens | *auth.getRefreshTokens()* |
 | Delete a Refresh Token | *auth.deleteRefreshToken()* |
 
-### [impCentral API: Deployments](https://preview-apidoc.electricimp.com/#tag/Deployments) ###
+### [impCentral API: Deployments](https://apidoc.electricimp.com/#tag/Deployments) ###
 
 Library Class: [Deployments](./lib/Deployments.js)
 
@@ -129,7 +127,7 @@ Library Class: [Deployments](./lib/Deployments.js)
 | Update a specific Deployment | *deployments.update()* |
 | Delete a Deployment | *deployments.delete()* |
 
-### [impCentral API: Device Groups](https://preview-apidoc.electricimp.com/#tag/DeviceGroups) ###
+### [impCentral API: Device Groups](https://apidoc.electricimp.com/#tag/DeviceGroups) ###
 
 Library Class: [DeviceGroups](./lib/DeviceGroups.js)
 
@@ -144,7 +142,7 @@ Library Class: [DeviceGroups](./lib/DeviceGroups.js)
 | Assign one or more devices to a Device Group | *deviceGroups.addDevices()* |
 | Remove one or more devices from a Device Group |  *deviceGroups.removeDevices()* |
 
-### [impCentral API: Devices](https://preview-apidoc.electricimp.com/#tag/Devices) ###
+### [impCentral API: Devices](https://apidoc.electricimp.com/#tag/Devices) ###
 
 Library Class: [Devices](./lib/Devices.js)
 
@@ -157,7 +155,7 @@ Library Class: [Devices](./lib/Devices.js)
 | Restart a Device | *devices.restart()* |
 | Get historical logs for a specific Device | *devices.getLogs()* |
 
-### [impCentral API: Logs](https://preview-apidoc.electricimp.com/#tag/Logs) ###
+### [impCentral API: Logs](https://apidoc.electricimp.com/#tag/Logs) ###
 
 Library Class: [LogStreams](./lib/LogStreams.js)
 
@@ -167,7 +165,7 @@ Library Class: [LogStreams](./lib/LogStreams.js)
 | Add a device to a Logstream | *logStreams.addDevice()* |
 | Remove a device from a Logstream | *logStreams.removeDevice()* |
 
-### [impCentral API: Products](https://preview-apidoc.electricimp.com/#tag/Products) ###
+### [impCentral API: Products](https://apidoc.electricimp.com/#tag/Products) ###
 
 Library Class: [Products](./lib/Products.js)
 
@@ -179,7 +177,7 @@ Library Class: [Products](./lib/Products.js)
 | Update a specific Product | *products.update()* |
 | Delete a specific Product | *products.delete()* |
 
-### [impCentral API: Webhooks](https://preview-apidoc.electricimp.com/#tag/Webhooks) ###
+### [impCentral API: Webhooks](https://apidoc.electricimp.com/#tag/Webhooks) ###
 
 Library Class: [Webhooks](./lib/Webhooks.js)
 
