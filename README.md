@@ -89,15 +89,13 @@ Use the method *debug()* to enable (*debug(true)*) or disable (*debug(false)*) t
 
 ## impCentral API Coverage ##
 
-**TODO: update according to the final impCentral API list of functionality**
-
 ### [Accounts](https://apidoc.electricimp.com/#tag/Accounts) ###
 
 Library Class: [Accounts](./lib/Accounts.js)
 
 | impCentral API Functionality | Library Methods |
 | ---------------------------- | ----------------- |
-| Retrieve account information (**TODO: not publicly specified yet**) | *accounts.get()* |
+| Retrieve account information | *accounts.get()* |
 | Retrieve Login Keys | *accounts.listLoginKeys()* |
 | Create a Login Key | *accounts.createLoginKey()* |
 | Retrieve a Login Key | *accounts.getLoginKey()* |
