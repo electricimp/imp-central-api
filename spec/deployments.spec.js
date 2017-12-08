@@ -242,6 +242,25 @@ describe('impCentralAPI.deployments test suite', () => {
             });
     });
 
+    it('should update min_supported_deployment', (done) => {
+        let newDeploymentId = null;
+        let attrs = {
+            device_code : 'server.log("Hello World, from your Device!");',
+            agent_code : 'server.log("Hello World, from your Agent!");'
+        };
+        impCentralApi.deployments.create(deviceGroupId, DeviceGroups.TYPE_DEVELOPMENT, attrs).
+            then((res) => {
+                expect(res.data.type).toBe('deployment');
+                expect(res.data.relationships.devicegroup.id).toBe(deviceGroupId);
+                newDeploymentId = res.data.id;
+            }).
+            then(() => impCentralApi.deviceGroups.updateMinSupportedDeployment(deviceGroupId, newDeploymentId)).
+            then(() => done()).
+            catch((error) => {
+                done.fail(error);
+            });
+    });
+
     it('should delete a specific deployment', (done) => {
         // Some recent deployment for a devicegroup can not be deleted.
         // So we create 10 new deployments to be able to delete old deploymentId deployment.
