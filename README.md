@@ -95,7 +95,8 @@ Library Class: [Accounts](./lib/Accounts.js)
 
 | impCentral API Functionality | Library Methods |
 | ---------------------------- | ----------------- |
-| Retrieve account information | *accounts.get()* |
+| Retrieve Account information | *accounts.get()* |
+| List Accounts | *accounts.list()* |
 | Retrieve Login Keys | *accounts.listLoginKeys()* |
 | Create a Login Key | *accounts.createLoginKey()* |
 | Retrieve a Login Key | *accounts.getLoginKey()* |
