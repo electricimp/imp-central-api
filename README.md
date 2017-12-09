@@ -9,7 +9,7 @@ To use *imp-central-api*, you will need to:
 - Install Node.js and the library.
 - Instantiate the library.
 - Initialize the library with an access token.
-- Calling impCentral API endpoints.
+- Call impCentral API endpoints.
 - Process the results, or
 - Process any errors you encountered.
 
@@ -74,7 +74,7 @@ The exact format of HTTP response body for every request can be found [here](htt
 [Error classes](./lib/Errors.js) define two types of errors returned by the library:
 
 - *InvalidDataError* Indicates that the library detected one of the following errors:
-  - The library has been wrongly initialized, eg. an access token has not be provided or obtained.
+  - The library has been wrongly initialized, eg. an access token has not been provided or obtained.
   - The library method has been called with invalid argument(s);
   - Internal library problem(s).
 
@@ -137,6 +137,8 @@ Library Class: [DeviceGroups](./lib/DeviceGroups.js)
 | Update a specific Device Group | *deviceGroups.update()* |
 | Delete a specific DeviceGroup | *deviceGroups.delete()* |
 | Restart all the devices in a Device Group | *deviceGroups.restartDevices()* |
+| Conditionally restart devices in a Device Group | *deviceGroups.conditionalRestartDevices()* |
+| Update the min_supported_deployment for a Device Group | *deviceGroups.updateMinSupportedDeployment()* |
 | Assign one or more devices to a Device Group | *deviceGroups.addDevices()* |
 | Remove one or more devices from a Device Group |  *deviceGroups.removeDevices()* |
 
@@ -151,6 +153,7 @@ Library Class: [Devices](./lib/Devices.js)
 | Remove a specific device from the account | *devices.delete()* |
 | Update a Device | *devices.update()* |
 | Restart a Device | *devices.restart()* |
+| Conditionally restart a Device | *devices.conditionalRestart()* |
 | Get historical logs for a specific Device | *devices.getLogs()* |
 
 ### [impCentral API: Logs](https://apidoc.electricimp.com/#tag/Logs) ###
@@ -159,7 +162,7 @@ Library Class: [LogStreams](./lib/LogStreams.js)
 
 | impCentral API Functionality | Library Methods |
 | ---------------------------- | ----------------- |
-| Request a new logstream, Retrieve logs from a Logstream | *logStreams.create()* |
+| Request a new Logstream, Retrieve logs from a Logstream | *logStreams.create()* |
 | Add a device to a Logstream | *logStreams.addDevice()* |
 | Remove a device from a Logstream | *logStreams.removeDevice()* |
 
