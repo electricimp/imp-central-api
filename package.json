@@ -1,7 +1,7 @@
 {
   "name": "imp-central-api",
   "version": "1.0.0",
-  "description": "Electric Imp Central API v5 Client",
+  "description": "Electric Imp impCentral API v5 Client",
   "main": "index.js",
   "scripts": {
     "test": "jasmine"

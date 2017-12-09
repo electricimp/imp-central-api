@@ -269,6 +269,37 @@ describe('impCentralAPI.devices test suite', () => {
         }
     }, util.TIMEOUT * 3);
 
+    it('should conditionally restart a specific device by ID, MAC address and Agent ID', (done) => {
+        if (Object.keys(devices).length > 0) {
+            let deviceId = Object.keys(devices)[0];
+            impCentralApi.devices.get(deviceId).
+                then((res) => {
+                    // unassigned devices can not be restarted
+                    if (('devicegroup' in res.data.relationships)) {
+                        let deviceIdentifiers = [deviceId, res.data.attributes.mac_address, res.data.attributes.agent_id];
+                        deviceIdentifiers.reduce(
+                            (acc, identifier) => acc.then(() => {
+                                return impCentralApi.devices.conditionalRestart(identifier).
+                                    then((res) => {
+                                    }).
+                                    catch((error) => {
+                                        done.fail(error);
+                                    });
+                            }), Promise.resolve()).then(() => done());
+                    }
+                    else {
+                        done();
+                    }
+                }).
+                catch((error) => {
+                    done.fail(error);
+                });
+        }
+        else {
+            done();
+        }
+    }, util.TIMEOUT * 3);
+
     it('should get historical logs for a specific Device by ID, MAC address and Agent ID', (done) => {
         if (Object.keys(devices).length > 0) {
             let deviceId = Object.keys(devices)[0];

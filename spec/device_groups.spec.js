@@ -287,6 +287,16 @@ describe('impCentralAPI.device_groups test suite', () => {
             });
     });
 
+    it('should conditionally restart devices from a specific device group', (done) => {
+        impCentralApi.deviceGroups.conditionalRestartDevices(deviceGroupId).
+            then((res) => {
+                done();
+            }).
+            catch((error) => {
+                done.fail(error);
+            });
+    });
+
     it('should remove devices by MAC address from a specific device group', (done) => {
         let devices = devicesInfo.map(deviceInfo => deviceInfo.attributes.mac_address);
         impCentralApi.deviceGroups.removeDevices(deviceGroupId, null, ...devices).
