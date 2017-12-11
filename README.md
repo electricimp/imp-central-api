@@ -139,9 +139,9 @@ Library Class: [DeviceGroups](./lib/DeviceGroups.js)
 | Delete a specific DeviceGroup | *deviceGroups.delete()* |
 | Restart all the devices in a Device Group | *deviceGroups.restartDevices()* |
 | Conditionally restart devices in a Device Group | *deviceGroups.conditionalRestartDevices()* |
-| Update the min_supported_deployment for a Device Group | *deviceGroups.updateMinSupportedDeployment()* |
+| Update the minimum supported deployment for a Device Group | *deviceGroups.updateMinSupportedDeployment()* |
 | Assign one or more devices to a Device Group | *deviceGroups.addDevices()* |
-| Remove one or more devices from a Device Group |  *deviceGroups.removeDevices()* |
+| Remove one or more devices from a Device Group | *deviceGroups.removeDevices()* |
 
 ### [impCentral API: Devices](https://apidoc.electricimp.com/#tag/Devices) ###
 
@@ -163,9 +163,9 @@ Library Class: [LogStreams](./lib/LogStreams.js)
 
 | impCentral API Functionality | Library Methods |
 | ---------------------------- | ----------------- |
-| Request a new Logstream, Retrieve logs from a Logstream | *logStreams.create()* |
-| Add a device to a Logstream | *logStreams.addDevice()* |
-| Remove a device from a Logstream | *logStreams.removeDevice()* |
+| Request a new logstream, Retrieve logs from a logstream | *logStreams.create()* |
+| Add a device to a logstream | *logStreams.addDevice()* |
+| Remove a device from a logstream | *logStreams.removeDevice()* |
 
 ### [impCentral API: Products](https://apidoc.electricimp.com/#tag/Products) ###
 
