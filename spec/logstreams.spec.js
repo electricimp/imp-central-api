@@ -53,7 +53,7 @@ describe('impCentralAPI.logStreams test suite', () => {
     beforeAll(util.init, util.TIMEOUT);
 
     it('should create a product', (done) => {
-        productName = 'tst_product_' + util.getRandomInt();
+        productName = util.PRODUCT_NAME;
         impCentralApi.products.create({name : productName}).
             then((res) => {
                 productId = res.data.id;
@@ -65,7 +65,7 @@ describe('impCentralAPI.logStreams test suite', () => {
     });
 
     it('should create a device group', (done) => {
-        deviceGroupName = 'tst_dev_group_' + util.getRandomInt();
+        deviceGroupName = util.DEVICE_GROUP_NAME;
         impCentralApi.deviceGroups.create(productId, DeviceGroups.TYPE_DEVELOPMENT, { name : deviceGroupName }).
             then((res) => {
                 expect(res.data.type).toBe(DeviceGroups.TYPE_DEVELOPMENT);
@@ -172,6 +172,18 @@ describe('impCentralAPI.logStreams test suite', () => {
         });
     });
 
+    it('should add device to a specific device group', (done) => {
+        if (deviceId) {
+            impCentralApi.deviceGroups.addDevices(deviceGroupId, deviceId).
+                then(() => {
+                    done();
+                });
+        }
+        else {
+            done();
+        }
+    });
+
     it('should create a deployment', (done) => {
         let attrs = {
             device_code : 'server.log("Hello World, from your Device!");',
@@ -179,20 +191,26 @@ describe('impCentralAPI.logStreams test suite', () => {
         };
         impCentralApi.deployments.create(deviceGroupId, DeviceGroups.TYPE_DEVELOPMENT, attrs).then((res) => {
             deploymentId = res.data.id;
-            if (deviceId) {
-                impCentralApi.deviceGroups.addDevices(deviceGroupId, deviceId).then(() => {
-                    impCentralApi.devices.restart(deviceId).then(() => {
-                        done();
-                    });
-                });
-            }
-            else {
-                done();
-            }
+            done();
         }).
         catch((error) => {
             done.fail(error);
         });
+    });
+
+    it('should restart a device', (done) => {
+        if (deviceId) {
+            impCentralApi.devices.restart(deviceId).
+                then(() => impCentralApi.devices.restart(deviceId)).
+                then(() => {
+                    done();
+                }).catch((error) => {
+                    done.fail(error);
+                });
+        }
+        else {
+            done();
+        }
     });
 
     it('should remove device from a text logstream', (done) => {
@@ -313,11 +331,13 @@ describe('impCentralAPI.logStreams test suite', () => {
 
     it('should restart a device', (done) => {
         if (deviceId) {
-            impCentralApi.devices.restart(deviceId).then(() => {
-                done();
-            }).catch((error) => {
-                done.fail(error);
-            });
+            impCentralApi.devices.restart(deviceId).
+                then(() => impCentralApi.devices.restart(deviceId)).
+                then(() => {
+                    done();
+                }).catch((error) => {
+                    done.fail(error);
+                });
         }
         else {
             done();

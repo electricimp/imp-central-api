@@ -31,6 +31,7 @@ const util = require('./util');
 const Errors = require('../lib/Errors');
 const Devices = require('../lib/Devices');
 const DeviceGroups = require('../lib/DeviceGroups');
+const DEVICES_LIMIT = 3;
 
 describe('impCentralAPI.devices test suite', () => {
     let impCentralApi = util.impCentralApi;
@@ -41,11 +42,12 @@ describe('impCentralAPI.devices test suite', () => {
     let deviceGroupId;
 
     let devices = {};
+    let assignedDevices = {};
 
     beforeAll(util.init, util.TIMEOUT);
 
     it('should create a product', (done) => {
-        productName = 'tst_product_' + util.getRandomInt();
+        productName = util.PRODUCT_NAME;
         impCentralApi.products.create({name : productName}).
             then((res) => {
                 expect(res.data.type).toBe('product');
@@ -53,6 +55,45 @@ describe('impCentralAPI.devices test suite', () => {
                 productId = res.data.id;
                 ownerId = res.data.relationships.owner.id;
                 done();
+            }).
+            catch((error) => {
+                done.fail(error);
+            });
+    });
+
+    it('should create a device group', (done) => {
+        deviceGroupName = util.DEVICE_GROUP_NAME;
+        impCentralApi.deviceGroups.create(productId, DeviceGroups.TYPE_DEVELOPMENT, { name : deviceGroupName }).
+            then((res) => {
+                deviceGroupId = res.data.id;
+                done();
+            }).
+            catch((error) => {
+                done.fail(error);
+            });
+    });
+
+    it('should add devices to a specific device group', (done) => {
+        impCentralApi.devices.list().
+            then((res) => {
+                if (res.data.length > 0) {
+                    for (let device of res.data.slice(0, DEVICES_LIMIT)) {
+                        assignedDevices[device.id] = 
+                            ('devicegroup' in device.relationships) ? 
+                            device.relationships.devicegroup.id : 
+                            null;
+                    }
+                    impCentralApi.deviceGroups.addDevices(deviceGroupId, ...Object.keys(assignedDevices)).
+                        then((res) => {
+                            done();
+                        }).
+                        catch((error) => {
+                            done.fail(error);
+                        });
+                }
+                else {
+                    done();
+                }
             }).
             catch((error) => {
                 done.fail(error);
@@ -132,11 +173,7 @@ describe('impCentralAPI.devices test suite', () => {
         if (Object.keys(devices).length > 0) {
             let deviceId = Object.keys(devices)[0];
             let device = devices[deviceId];
-            let deviceIdentifiers = [deviceId, device.attributes.mac_address];
-            let agentId = device.attributes.agent_id;
-            if (agentId) {
-                deviceIdentifiers.push(agentId);
-            }
+            let deviceIdentifiers = [deviceId, device.attributes.mac_address, device.attributes.agent_id];
             deviceIdentifiers.reduce(
                 (acc, identifier) => acc.then(() => {
                     return impCentralApi.devices.get(identifier).
@@ -174,11 +211,7 @@ describe('impCentralAPI.devices test suite', () => {
                 then((res) => {
                     let deviceName = res.data.attributes.name;
                     let testName = 'device test name';
-                    let deviceIdentifiers = [deviceId, res.data.attributes.mac_address];
-                    let agentId = res.data.attributes.agent_id;
-                    if (agentId) {
-                        deviceIdentifiers.push(agentId);
-                    }
+                    let deviceIdentifiers = [deviceId, res.data.attributes.mac_address, res.data.attributes.agent_id];
                     deviceIdentifiers.reduce(
                         (acc, identifier) => acc.then(() => {
                             return impCentralApi.devices.update(identifier, { name : testName }).
@@ -305,11 +338,7 @@ describe('impCentralAPI.devices test suite', () => {
             let deviceId = Object.keys(devices)[0];
             impCentralApi.devices.get(deviceId).
                 then((res) => {
-                    let deviceIdentifiers = [deviceId, res.data.attributes.mac_address];
-                    let agentId = res.data.attributes.agent_id;
-                    if (agentId) {
-                        deviceIdentifiers.push(agentId);
-                    }
+                    let deviceIdentifiers = [deviceId, res.data.attributes.mac_address, res.data.attributes.agent_id];
                     deviceIdentifiers.reduce(
                         (acc, identifier) => acc.then(() => {
                             return impCentralApi.devices.getLogs(identifier).
@@ -344,6 +373,35 @@ describe('impCentralAPI.devices test suite', () => {
         else {
             done();
         }
+    });
+
+    it('should remove devices from a specific device group', (done) => {
+        impCentralApi.deviceGroups.removeDevices(deviceGroupId, null, ...Object.keys(assignedDevices)).
+            then((res) => {
+                for (let device in assignedDevices) {
+                    if (assignedDevices[device]) {
+                        impCentralApi.deviceGroups.addDevices(assignedDevices[device], device).
+                            then((res) => {}).
+                            catch((error) => {
+                                done.fail(error);
+                            });
+                    }
+                }
+                done();
+            }).
+            catch((error) => {
+                done.fail(error);
+            });
+    });
+
+    it('should delete a specific device group', (done) => {
+        impCentralApi.deviceGroups.delete(deviceGroupId).
+            then((res) => {
+                done();
+            }).
+            catch((error) => {
+                done.fail(error);
+            });
     });
 
     it('should delete a specific product', (done) => {

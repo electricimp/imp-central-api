@@ -31,6 +31,8 @@ const util = require('./util');
 const Errors = require('../lib/Errors');
 const Products = require('../lib/Products');
 const DeviceGroups = require('../lib/DeviceGroups');
+const Devices = require('../lib/Devices');
+const DEVICES_LIMIT = 3;
 
 describe('impCentralAPI.device_groups test suite', () => {
     let impCentralApi = util.impCentralApi;
@@ -44,7 +46,7 @@ describe('impCentralAPI.device_groups test suite', () => {
     beforeAll(util.init, util.TIMEOUT);
 
     it('should create a product', (done) => {
-        productName = 'tst_product_' + util.getRandomInt();
+        productName = util.PRODUCT_NAME;
         impCentralApi.products.create({name : productName}).
             then((res) => {
                 productId = res.data.id;
@@ -53,10 +55,10 @@ describe('impCentralAPI.device_groups test suite', () => {
             catch((error) => {
                 done.fail(error);
             });
-    });
+    }, util.TIMEOUT);
 
     it('should create a device group', (done) => {
-        deviceGroupName = 'tst_dev_group_' + util.getRandomInt();
+        deviceGroupName = util.DEVICE_GROUP_NAME;
         impCentralApi.deviceGroups.create(productId, DeviceGroups.TYPE_DEVELOPMENT, { name : deviceGroupName }).
             then((res) => {
                 expect(res.data.type).toBe(DeviceGroups.TYPE_DEVELOPMENT);
@@ -84,7 +86,7 @@ describe('impCentralAPI.device_groups test suite', () => {
     });
 
     it('should not create a device group with wrong type', (done) => {
-        let deviceGroupName = 'tst_dev_group_' + util.getRandomInt();
+        let deviceGroupName = util.DEVICE_GROUP_NAME_2;
         impCentralApi.deviceGroups.create(productId, 'wrong_type', { name : deviceGroupName }).
             then((res) => {
                 done.fail('device group with wrong type created successfully');
@@ -98,7 +100,7 @@ describe('impCentralAPI.device_groups test suite', () => {
     });
 
     it('should not create a device group with wrong attributes', (done) => {
-        let deviceGroupName = 'tst_dev_group_' + util.getRandomInt();
+        let deviceGroupName = util.DEVICE_GROUP_NAME_3;
         impCentralApi.deviceGroups.create(productId, DeviceGroups.TYPE_DEVELOPMENT, { name_ : deviceGroupName }).
             then((res) => {
                 done.fail('device group with wrong attributes created successfully');
@@ -200,7 +202,7 @@ describe('impCentralAPI.device_groups test suite', () => {
 
     it('should update a specific device group', (done) => {
         let descr = 'test description';
-        deviceGroupName = 'tst_dev_group_' + util.getRandomInt();
+        deviceGroupName = util.DEVICE_GROUP_NAME_4;
         impCentralApi.deviceGroups.update(deviceGroupId, DeviceGroups.TYPE_DEVELOPMENT, { description : descr, name: deviceGroupName }).
             then((res) => {
                 expect(res.data.id).toBe(deviceGroupId);
@@ -243,7 +245,7 @@ describe('impCentralAPI.device_groups test suite', () => {
         impCentralApi.devices.list().
             then((res) => {
                 if (res.data.length > 0) {
-                    for (let device of res.data) {
+                    for (let device of res.data.slice(0, DEVICES_LIMIT)) {
                         devices[device.id] = 
                             ('devicegroup' in device.relationships) ? 
                             device.relationships.devicegroup.id : 
@@ -251,7 +253,7 @@ describe('impCentralAPI.device_groups test suite', () => {
                     }
                     impCentralApi.deviceGroups.addDevices(deviceGroupId, ...Object.keys(devices)).
                         then((res) => {
-                            impCentralApi.devices.list().
+                            impCentralApi.devices.list({ [Devices.FILTER_DEVICE_GROUP_ID] : deviceGroupId }).
                             then((res) => {
                                 expect(res.data.length).toBe(Object.keys(devices).length);
                                 for (let device of res.data) {
@@ -312,7 +314,7 @@ describe('impCentralAPI.device_groups test suite', () => {
         let devices = devicesInfo.map(deviceInfo => deviceInfo.attributes.mac_address);
         impCentralApi.deviceGroups.addDevices(deviceGroupId, ...devices).
             then((res) => {
-                impCentralApi.devices.list().
+                impCentralApi.devices.list({ [Devices.FILTER_DEVICE_GROUP_ID] : deviceGroupId }).
                 then((res) => {
                     expect(res.data.length).toBe(Object.keys(devices).length);
                     for (let device of res.data) {
@@ -341,20 +343,27 @@ describe('impCentralAPI.device_groups test suite', () => {
     }, util.TIMEOUT * 3);
 
     it('should add devices by Agent ID to a specific device group', (done) => {
-        let devices = devicesInfo.map(deviceInfo => deviceInfo.attributes.agent_id);
-        impCentralApi.deviceGroups.addDevices(deviceGroupId, ...devices).
+        // impossible to address unassigned devices by Agent ID. Need to assign them to a different DG first.
+        let devGroupId;
+        impCentralApi.deviceGroups.create(productId, DeviceGroups.TYPE_DEVELOPMENT, { name : util.DEVICE_GROUP_NAME_5 }).
             then((res) => {
-                impCentralApi.devices.list().
-                then((res) => {
-                    expect(res.data.length).toBe(Object.keys(devices).length);
-                    for (let device of res.data) {
-                        expect(device.relationships.devicegroup.id).toBe(deviceGroupId);
-                    }
-                    done();
-                }).
-                catch((error) => {
-                    done.fail(error);
-                });
+                devGroupId = res.data.id;
+                return impCentralApi.deviceGroups.addDevices(devGroupId, ...Object.keys(devices));
+            }).
+            then(() => {
+                let devices = devicesInfo.map(deviceInfo => deviceInfo.attributes.agent_id);
+                return impCentralApi.deviceGroups.addDevices(deviceGroupId, ...devices);
+            }).
+            then((res) => impCentralApi.devices.list({ [Devices.FILTER_DEVICE_GROUP_ID] : deviceGroupId })).
+            then((res) => {
+                expect(res.data.length).toBe(Object.keys(devices).length);
+                for (let device of res.data) {
+                    expect(device.relationships.devicegroup.id).toBe(deviceGroupId);
+                }
+            }).
+            then(() => impCentralApi.deviceGroups.delete(devGroupId)).
+            then(() => {
+                done();
             }).
             catch((error) => {
                 done.fail(error);

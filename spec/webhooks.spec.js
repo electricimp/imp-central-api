@@ -47,7 +47,7 @@ describe('impCentralAPI.webhooks test suite', () => {
     beforeAll(util.init, util.TIMEOUT);
 
     it('should create a product', (done) => {
-        productName = 'tst_product_' + util.getRandomInt();
+        productName = util.PRODUCT_NAME;
         impCentralApi.products.create({name : productName}).
             then((res) => {
                 productId = res.data.id;
@@ -59,7 +59,7 @@ describe('impCentralAPI.webhooks test suite', () => {
     });
 
     it('should create a device group', (done) => {
-        deviceGroupName = 'tst_dev_group_' + util.getRandomInt();
+        deviceGroupName = util.DEVICE_GROUP_NAME;
         impCentralApi.deviceGroups.create(productId, DeviceGroups.TYPE_DEVELOPMENT, { name : deviceGroupName }).
             then((res) => {
                 expect(res.data.type).toBe(DeviceGroups.TYPE_DEVELOPMENT);
@@ -74,7 +74,7 @@ describe('impCentralAPI.webhooks test suite', () => {
     });
 
     it('attempt to create a production device group', (done) => {
-        deviceGroupName = 'tst_dev_group_' + util.getRandomInt();
+        deviceGroupName = util.DEVICE_GROUP_NAME_2;
         impCentralApi.deviceGroups.create(productId, DeviceGroups.TYPE_PRODUCTION, { name : deviceGroupName }).
             then((res) => {
                 expect(res.data.type).toBe(DeviceGroups.TYPE_PRODUCTION);
