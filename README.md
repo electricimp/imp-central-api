@@ -321,6 +321,7 @@ impCentralApi.logStreams.create(logMessage, logState).then(logStream => {
 
 The library contains [Jasmine](https://www.npmjs.com/package/jasmine) tests in the [spec folder](./spec). To setup and run them, you will need to:
 1. Clone or download the latest version of *imp-central-api* repository to a local *imp-central-api* folder. For example, by a command `git clone https://github.com/electricimp/imp-central-api.git imp-central-api`
+1. Install imp-central-api dependencies by calling `npm install` command from your local *imp-central-api* folder.
 1. Set the mandatory environment variables:
     - **IMP_CENTRAL_USER_EMAIL** - impCentral account username or email address.
     - **IMP_CENTRAL_USER_PASSWORD** - the account password.

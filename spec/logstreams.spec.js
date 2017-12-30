@@ -41,6 +41,7 @@ describe('impCentralAPI.logStreams test suite', () => {
     let deviceGroupName;
     let deviceGroupId;
     let deviceId = null;
+    let deviceOnline = false;
     let deviceMacAddress;
     let deviceAgentId;
     let deploymentId;
@@ -153,8 +154,14 @@ describe('impCentralAPI.logStreams test suite', () => {
                         ('devicegroup' in device.relationships) ? 
                         device.relationships.devicegroup.id : 
                         null;
+                    if (!deviceId && device.attributes.device_online) {
+                        deviceId = device.id;
+                        deviceOnline = true;
+                    }
                 }
-                deviceId = res.data[0].id;
+                if (!deviceId) {
+                    deviceId = res.data[0].id;
+                }
                 impCentralApi.logStreams.addDevice(textLogStreamId, deviceId).
                     then((res) => {
                         done();
@@ -201,7 +208,6 @@ describe('impCentralAPI.logStreams test suite', () => {
     it('should restart a device', (done) => {
         if (deviceId) {
             impCentralApi.devices.restart(deviceId).
-                then(() => impCentralApi.devices.restart(deviceId)).
                 then(() => {
                     done();
                 }).catch((error) => {
@@ -332,7 +338,6 @@ describe('impCentralAPI.logStreams test suite', () => {
     it('should restart a device', (done) => {
         if (deviceId) {
             impCentralApi.devices.restart(deviceId).
-                then(() => impCentralApi.devices.restart(deviceId)).
                 then(() => {
                     done();
                 }).catch((error) => {
@@ -420,7 +425,9 @@ describe('impCentralAPI.logStreams test suite', () => {
         if (deviceId) {
             expect(logStreamInfo.added).toBe(true);
             expect(logStreamInfo.removed).toBe(true);
-            expect(logStreamInfo.message).toBe(true);
+            if (deviceOnline) {
+                expect(logStreamInfo.message).toBe(true);
+            }
         }
         expect(logStreamInfo.closed).toBe(true);
         done();
@@ -431,7 +438,9 @@ describe('impCentralAPI.logStreams test suite', () => {
         if (deviceId) {
             expect(logStreamInfo.added).toBe(true);
             expect(logStreamInfo.removed).toBe(true);
-            expect(logStreamInfo.message).toBe(true);
+            if (deviceOnline) {
+                expect(logStreamInfo.message).toBe(true);
+            }
         }
         done();
     });
