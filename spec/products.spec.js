@@ -40,7 +40,7 @@ describe('impCentralAPI.products test suite', () => {
     beforeAll(util.init, util.TIMEOUT);
 
     it('should create a product', (done) => {
-        productName = 'tst_product_' + util.getRandomInt();
+        productName = util.PRODUCT_NAME;
         impCentralApi.products.create({name : productName}).
             then((res) => {
                 expect(res.data.type).toBe('product');
@@ -153,7 +153,7 @@ describe('impCentralAPI.products test suite', () => {
 
     it('should update a specific product', (done) => {
         let descr = 'test description';
-        productName = 'tst_product_' + util.getRandomInt();
+        productName = util.PRODUCT_NAME_2;
         impCentralApi.products.update(productId, {description : descr, name: productName}).
             then((res) => {
                 expect(res.data.id).toBe(productId);
