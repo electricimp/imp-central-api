@@ -448,11 +448,10 @@ describe('impCentralAPI.logStreams test suite', () => {
     function _restart(deviceId, done) {
         if (deviceId) {
             impCentralApi.devices.restart(deviceId).then(() => {
+                // timeout to receive logs from logstream
                 setTimeout(() => {
-                    impCentralApi.devices.restart(deviceId).then(() => {
-                        setTimeout(() => { done(); }, 3000) 
-                    });
-                }, 3000);
+                    done();
+                }, 5000);
             }).catch((error) => {
                 done.fail(error);
             });
