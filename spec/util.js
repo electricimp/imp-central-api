@@ -44,7 +44,7 @@ const DEVICE_GROUP_NAME_8 = DEVICE_GROUP_NAME + '_8';
 
 var impCentralApi = new ImpCentralApi(config.apiEndpoint);
 
-function _listEntities(entityApi, filters, pageNumber = 1, pageSize = 20) {
+function _listEntities(entityApi, filters, pageNumber = 1, pageSize = 100) {
     return entityApi.list(filters, pageNumber, pageSize).then(result => {
         let data = result.data;
         if ('next' in result.links) {
@@ -127,7 +127,10 @@ module.exports.init = function (done) {
         then(() => cleanupDeviceGroups()).
         then(() => cleanupProducts()).
         then(() => {
-            done();
+            // timeout to increase available requests limit
+            setTimeout(() => {
+                done();
+            }, 5000);
         }).
         catch((error) => {
             done.fail(error);
