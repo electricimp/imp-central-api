@@ -205,19 +205,9 @@ describe('impCentralAPI.logStreams test suite', () => {
         });
     });
 
-    it('should restart a device', (done) => {
-        if (deviceId) {
-            impCentralApi.devices.restart(deviceId).
-                then(() => {
-                    done();
-                }).catch((error) => {
-                    done.fail(error);
-                });
-        }
-        else {
-            done();
-        }
-    });
+    it('should restart a device from text logstream', (done) => {
+        _restart(deviceId, done);
+    }, util.TIMEOUT);
 
     it('should remove device from a text logstream', (done) => {
         if (deviceId) {
@@ -335,19 +325,9 @@ describe('impCentralAPI.logStreams test suite', () => {
         }
     }, util.TIMEOUT * 3);
 
-    it('should restart a device', (done) => {
-        if (deviceId) {
-            impCentralApi.devices.restart(deviceId).
-                then(() => {
-                    done();
-                }).catch((error) => {
-                    done.fail(error);
-                });
-        }
-        else {
-            done();
-        }
-    });
+    it('should restart a device from json logstream', (done) => {
+        _restart(deviceId, done);
+    }, util.TIMEOUT);
 
     it('should remove device by Agent ID from a json logstream', (done) => {
         if (deviceId) {
@@ -464,4 +444,21 @@ describe('impCentralAPI.logStreams test suite', () => {
                 done.fail(error);
             });
     });
+
+    function _restart(deviceId, done) {
+        if (deviceId) {
+            impCentralApi.devices.restart(deviceId).then(() => {
+                setTimeout(() => {
+                    impCentralApi.devices.restart(deviceId).then(() => {
+                        setTimeout(() => { done(); }, 3000) 
+                    });
+                }, 3000);
+            }).catch((error) => {
+                done.fail(error);
+            });
+        }
+        else {
+            done();
+        }
+    }
 });
