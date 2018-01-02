@@ -263,12 +263,15 @@ describe('impCentralAPI.deployments test suite', () => {
 
     it('should delete a specific deployment', (done) => {
         // Some recent deployment for a devicegroup can not be deleted.
-        // So we create 10 new deployments to be able to delete old deploymentId deployment.
+        // So we create a new one before and set min_supported_deployment to it.
         let attrs = {
             device_code : 'server.log("Hello World, from your Device!");',
             agent_code : 'server.log("Hello World, from your Agent!");'
         };
-        Promise.all(Array(10).fill(null).map(() => impCentralApi.deployments.create(deviceGroupId, DeviceGroups.TYPE_DEVELOPMENT, attrs))).
+        impCentralApi.deployments.create(deviceGroupId, DeviceGroups.TYPE_DEVELOPMENT, attrs).
+            then((res) => {
+                impCentralApi.deviceGroups.updateMinSupportedDeployment(deviceGroupId, res.data.id);
+            }).
             then((res) => {
                 impCentralApi.deployments.delete(deploymentId).
                     then((res) => {
