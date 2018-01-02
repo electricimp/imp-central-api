@@ -331,6 +331,8 @@ The library contains [Jasmine](https://www.npmjs.com/package/jasmine) tests in t
 1. Alternatively, instead of the environment variables setting, you can directly specify the values of the corresponding variables in your local [imp-central-api/spec/config.js file](./spec/config.js).
 1. Run the tests by calling `npm test` command from your local *imp-central-api* folder.
 
+It is recommended that your devices do not change their state between online and offline during the tests running.
+
 ## License ##
 
 This library is licensed under the [MIT License](./LICENSE).
