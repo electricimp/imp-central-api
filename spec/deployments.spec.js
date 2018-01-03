@@ -44,7 +44,7 @@ describe('impCentralAPI.deployments test suite', () => {
     beforeAll(util.init, util.TIMEOUT);
 
     it('should create a product', (done) => {
-        productName = 'tst_product_' + util.getRandomInt();
+        productName = util.PRODUCT_NAME;
         impCentralApi.products.create({name : productName}).
             then((res) => {
                 productId = res.data.id;
@@ -56,7 +56,7 @@ describe('impCentralAPI.deployments test suite', () => {
     });
 
     it('should create a device group', (done) => {
-        deviceGroupName = 'tst_dev_group_' + util.getRandomInt();
+        deviceGroupName = util.DEVICE_GROUP_NAME;
         impCentralApi.deviceGroups.create(productId, DeviceGroups.TYPE_DEVELOPMENT, { name : deviceGroupName }).
             then((res) => {
                 expect(res.data.type).toBe(DeviceGroups.TYPE_DEVELOPMENT);
@@ -263,12 +263,15 @@ describe('impCentralAPI.deployments test suite', () => {
 
     it('should delete a specific deployment', (done) => {
         // Some recent deployment for a devicegroup can not be deleted.
-        // So we create 10 new deployments to be able to delete old deploymentId deployment.
+        // So we create a new one before and set min_supported_deployment to it.
         let attrs = {
             device_code : 'server.log("Hello World, from your Device!");',
             agent_code : 'server.log("Hello World, from your Agent!");'
         };
-        Promise.all(Array(10).fill(null).map(() => impCentralApi.deployments.create(deviceGroupId, DeviceGroups.TYPE_DEVELOPMENT, attrs))).
+        impCentralApi.deployments.create(deviceGroupId, DeviceGroups.TYPE_DEVELOPMENT, attrs).
+            then((res) => {
+                impCentralApi.deviceGroups.updateMinSupportedDeployment(deviceGroupId, res.data.id);
+            }).
             then((res) => {
                 impCentralApi.deployments.delete(deploymentId).
                     then((res) => {
