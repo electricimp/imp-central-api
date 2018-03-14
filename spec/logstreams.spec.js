@@ -401,28 +401,11 @@ describe('impCentralAPI.logStreams test suite', () => {
     });
 
     it('validate text logstreams state', (done) => {
-        let logStreamInfo = logStreamsInfo[textLogStreamId];
-        if (deviceId) {
-            expect(logStreamInfo.added).toBe(true);
-            expect(logStreamInfo.removed).toBe(true);
-            if (deviceOnline) {
-                expect(logStreamInfo.message).toBe(true);
-            }
-        }
-        expect(logStreamInfo.closed).toBe(true);
-        done();
+        _validateLogsteamState(textLogStreamId, done);
     });
 
     it('validate json logstreams state', (done) => {
-        let logStreamInfo = logStreamsInfo[jsonLogStreamId];
-        if (deviceId) {
-            expect(logStreamInfo.added).toBe(true);
-            expect(logStreamInfo.removed).toBe(true);
-            if (deviceOnline) {
-                expect(logStreamInfo.message).toBe(true);
-            }
-        }
-        done();
+        _validateLogsteamState(jsonLogStreamId, done);
     });
 
     it('should delete a specific device group', (done) => {
@@ -444,6 +427,18 @@ describe('impCentralAPI.logStreams test suite', () => {
                 done.fail(error);
             });
     });
+
+    function _validateLogsteamState(logStreamId, done) {
+        let logStreamInfo = logStreamsInfo[logStreamId];
+        if (deviceId) {
+            expect(logStreamInfo.added).toBe(true);
+            expect(logStreamInfo.removed).toBe(true);
+            if (deviceOnline) {
+                expect(logStreamInfo.message).toBe(true);
+            }
+        }
+        done();
+    }
 
     function _restart(deviceId, done) {
         if (deviceId) {
