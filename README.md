@@ -23,11 +23,19 @@ Each of these steps are described in the following sections.
 npm install -g imp-central-api
 ```
 
+#### Proxy Setup ####
+
+If *imp-central-api* is going to connect to the impCentral API via a proxy, one of the following environment variables should be set to a value in URL format:
+- `HTTPS_PROXY` (or `https_proxy`) &mdash; for the proxy which passes HTTPs requests.
+- `HTTP_PROXY` (or `http_proxy`) &mdash; for the proxy which passes HTTP requests.
+
+Note, the default impCentral API base endpoint is working over HTTPs.
+
 ### Instantiation ###
 
 To instantiate this library, call the [ImpCentralApi class](./lib/ImpCentralApi.js) constructor.
 
-By default, *imp-central-api* works with the following impCentral API base endpoint: *api.electricimp.com/v5*. You can optionally pass an alternative impCentral API base endpoint into the constructor. This can be used to connect to Private impCloud™ installations. The class method *apiEndpoint()* can be used to obtain the current impCentral API base endpoint.
+By default, *imp-central-api* works with the following impCentral API base endpoint: `https://api.electricimp.com/v5`. You can optionally pass an alternative impCentral API base endpoint into the constructor. This can be used to connect to Private impCloud™ installations. The class method *apiEndpoint()* can be used to obtain the current impCentral API base endpoint.
 
 After instantiation, use [ImpCentralApi class](./lib/ImpCentralApi.js) methods to obtain the subclasses which provide the methods you will use to access specific impCentral API resources. For example:
 
