@@ -62,10 +62,10 @@ describe('impCentralAPI.auth and impCentralAPI.accounts test suite', () => {
             });
     });
 
-    it('should not login with empty email or password', (done) => {
-        impCentralApi.auth.login('', null).
+    it('should not login with empty email', (done) => {
+        impCentralApi.auth.login('', 'pwd').
             then((res) => {
-                done.fail('login with empty email or password');
+                done.fail('login with empty email');
             }).
             catch((error) => {
                 if (!(error instanceof Errors.InvalidDataError)) {
