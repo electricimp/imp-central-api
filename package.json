@@ -1,11 +1,15 @@
 {
   "name": "imp-central-api",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "Electric Imp impCentral API v5 Client",
   "main": "index.js",
   "scripts": {
     "test": "jasmine"
   },
+  "files": [
+    "/lib",
+    "index.js"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/electricimp/imp-central-api.git"
@@ -23,12 +27,12 @@
   },
   "homepage": "https://github.com/electricimp/imp-central-api",
   "devDependencies": {
-    "jasmine": "^2.4.1",
-    "jasmine-expect": "^2.0.2"
+    "jasmine": "^3.3.0",
+    "jasmine-expect": "^3.8.4"
   },
   "dependencies": {
     "request": "^2.69.0",
     "eventsource": "^1.0.2",
-    "hoek": "^5.0.3"
+    "hoek": "^6.0.2"
   }
 }
