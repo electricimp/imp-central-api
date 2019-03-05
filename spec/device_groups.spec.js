@@ -1,6 +1,6 @@
 // MIT License
 //
-// Copyright 2017 Electric Imp
+// Copyright 2017-2019 Electric Imp
 //
 // SPDX-License-Identifier: MIT
 //
@@ -46,7 +46,7 @@ describe('impCentralAPI.device_groups test suite', () => {
     beforeAll(util.init, util.TIMEOUT);
 
     it('should create a product', (done) => {
-        productName = util.PRODUCT_NAME;
+        productName = util.getProductName();
         impCentralApi.products.create({name : productName}).
             then((res) => {
                 productId = res.data.id;
@@ -58,7 +58,7 @@ describe('impCentralAPI.device_groups test suite', () => {
     }, util.TIMEOUT);
 
     it('should create a device group', (done) => {
-        deviceGroupName = util.DEVICE_GROUP_NAME;
+        deviceGroupName = util.getDeviceGroupName();
         impCentralApi.deviceGroups.create(productId, DeviceGroups.TYPE_DEVELOPMENT, { name : deviceGroupName }).
             then((res) => {
                 expect(res.data.type).toBe(DeviceGroups.TYPE_DEVELOPMENT);
@@ -86,7 +86,7 @@ describe('impCentralAPI.device_groups test suite', () => {
     });
 
     it('should not create a device group with wrong type', (done) => {
-        let deviceGroupName = util.DEVICE_GROUP_NAME_2;
+        let deviceGroupName = util.getDeviceGroupName(1);
         impCentralApi.deviceGroups.create(productId, 'wrong_type', { name : deviceGroupName }).
             then((res) => {
                 done.fail('device group with wrong type created successfully');
@@ -100,7 +100,7 @@ describe('impCentralAPI.device_groups test suite', () => {
     });
 
     it('should not create a device group with wrong attributes', (done) => {
-        let deviceGroupName = util.DEVICE_GROUP_NAME_3;
+        let deviceGroupName = util.getDeviceGroupName(2);
         impCentralApi.deviceGroups.create(productId, DeviceGroups.TYPE_DEVELOPMENT, { name_ : deviceGroupName }).
             then((res) => {
                 done.fail('device group with wrong attributes created successfully');
@@ -202,7 +202,7 @@ describe('impCentralAPI.device_groups test suite', () => {
 
     it('should update a specific device group', (done) => {
         let descr = 'test description';
-        deviceGroupName = util.DEVICE_GROUP_NAME_4;
+        deviceGroupName = util.getDeviceGroupName(3);
         impCentralApi.deviceGroups.update(deviceGroupId, DeviceGroups.TYPE_DEVELOPMENT, { description : descr, name: deviceGroupName }).
             then((res) => {
                 expect(res.data.id).toBe(deviceGroupId);
@@ -345,7 +345,7 @@ describe('impCentralAPI.device_groups test suite', () => {
     it('should add devices by Agent ID to a specific device group', (done) => {
         // impossible to address unassigned devices by Agent ID. Need to assign them to a different DG first.
         let devGroupId;
-        impCentralApi.deviceGroups.create(productId, DeviceGroups.TYPE_DEVELOPMENT, { name : util.DEVICE_GROUP_NAME_5 }).
+        impCentralApi.deviceGroups.create(productId, DeviceGroups.TYPE_DEVELOPMENT, { name : util.getDeviceGroupName(4) }).
             then((res) => {
                 devGroupId = res.data.id;
                 return impCentralApi.deviceGroups.addDevices(devGroupId, ...Object.keys(devices));

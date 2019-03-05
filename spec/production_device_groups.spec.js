@@ -1,6 +1,6 @@
 // MIT License
 //
-// Copyright 2017 Electric Imp
+// Copyright 2017-2019 Electric Imp
 //
 // SPDX-License-Identifier: MIT
 //
@@ -38,17 +38,21 @@ describe('impCentralAPI.production_device_groups test suite', () => {
     let productId;
     let prodDeviceGroupName;
     let prodDeviceGroupId;
+    let dutDeviceGroupName;
+    let dutDeviceGroupId;
     let ffDeviceGroupName;
     let ffDeviceGroupId;
     let preProdDeviceGroupName;
     let preProdDeviceGroupId;
+    let preDutDeviceGroupName;
+    let preDutDeviceGroupId;
     let preFFDeviceGroupName;
     let preFFDeviceGroupId;
 
     beforeAll(util.init, util.TIMEOUT);
 
     it('should create a product', (done) => {
-        productName = util.PRODUCT_NAME;
+        productName = util.getProductName();
         impCentralApi.products.create({name : productName}).
             then((res) => {
                 productId = res.data.id;
@@ -60,7 +64,7 @@ describe('impCentralAPI.production_device_groups test suite', () => {
     });
 
     it('should create a production device group', (done) => {
-        prodDeviceGroupName = util.DEVICE_GROUP_NAME;
+        prodDeviceGroupName = util.getDeviceGroupName();
         impCentralApi.deviceGroups.create(productId, DeviceGroups.TYPE_PRODUCTION, { name : prodDeviceGroupName }).
             then((res) => {
                 expect(res.data.type).toBe(DeviceGroups.TYPE_PRODUCTION);
@@ -79,11 +83,33 @@ describe('impCentralAPI.production_device_groups test suite', () => {
             });
     });
 
+    it('should create a dut device group', (done) => {
+        dutDeviceGroupName = util.getDeviceGroupName(8);
+        impCentralApi.deviceGroups.create(productId, DeviceGroups.TYPE_DUT, { name : dutDeviceGroupName }).
+            then((res) => {
+                expect(res.data.type).toBe(DeviceGroups.TYPE_DUT);
+                expect(res.data.attributes.name).toBe(dutDeviceGroupName);
+                expect(res.data.relationships.product.id).toBe(productId);
+                dutDeviceGroupId = res.data.id;
+                done();
+            }).
+            catch((error) => {
+                if (util.noProductionPermissions(error)) {
+                    done();
+                }
+                else {
+                    done.fail(error);
+                }
+            });
+    });
+
     it('should not create a factoryfixture device group without production_target', (done) => {
-        ffDeviceGroupName = util.DEVICE_GROUP_NAME_2;
+        ffDeviceGroupName = util.getDeviceGroupName(1);
         impCentralApi.deviceGroups.create(
-            productId, DeviceGroups.TYPE_FACTORY_FIXTURE, 
-            { name : ffDeviceGroupName, description : 'test description' }).
+            productId, DeviceGroups.TYPE_FACTORY_FIXTURE,
+            { name : ffDeviceGroupName, description : 'test description' },
+            null,
+            { type : DeviceGroups.TYPE_DUT, id : dutDeviceGroupId }).
             then((res) => {
                 done.fail('factoryfixture device group without production_target created successfully');
             }).
@@ -95,18 +121,37 @@ describe('impCentralAPI.production_device_groups test suite', () => {
             });
     });
 
-    it('should create a factoryfixture device group with production_target', (done) => {
+    it('should not create a factoryfixture device group without dut_target', (done) => {
+        ffDeviceGroupName = util.getDeviceGroupName(1);
+        impCentralApi.deviceGroups.create(
+            productId, DeviceGroups.TYPE_FACTORY_FIXTURE,
+            { name : ffDeviceGroupName, description : 'test description' },
+            { type : DeviceGroups.TYPE_PRODUCTION, id : prodDeviceGroupId }).
+            then((res) => {
+                done.fail('factoryfixture device group without dut_target created successfully');
+            }).
+            catch((error) => {
+                if (!(error instanceof Errors.InvalidDataError)) {
+                    done.fail('unexpected error');
+                }
+                done();
+            });
+    });
+
+    it('should create a factoryfixture device group with production_target and dut_target', (done) => {
         if (prodDeviceGroupId) {
-            ffDeviceGroupName = util.DEVICE_GROUP_NAME_3;
+            ffDeviceGroupName = util.getDeviceGroupName(2);
             impCentralApi.deviceGroups.create(
-                productId, DeviceGroups.TYPE_FACTORY_FIXTURE, 
+                productId, DeviceGroups.TYPE_FACTORY_FIXTURE,
                 { name : ffDeviceGroupName, description : 'test description' },
-                { type : DeviceGroups.TYPE_PRODUCTION, id : prodDeviceGroupId }).
+                { type : DeviceGroups.TYPE_PRODUCTION, id : prodDeviceGroupId },
+                { type : DeviceGroups.TYPE_DUT, id : dutDeviceGroupId }).
                 then((res) => {
                     expect(res.data.type).toBe(DeviceGroups.TYPE_FACTORY_FIXTURE);
                     expect(res.data.attributes.name).toBe(ffDeviceGroupName);
                     expect(res.data.relationships.product.id).toBe(productId);
                     expect(res.data.relationships.production_target.id).toBe(prodDeviceGroupId);
+                    expect(res.data.relationships.dut_target.id).toBe(dutDeviceGroupId);
                     ffDeviceGroupId = res.data.id;
                     done();
                 }).
@@ -120,7 +165,7 @@ describe('impCentralAPI.production_device_groups test suite', () => {
     });
 
     it('should create a pre_production device group', (done) => {
-        preProdDeviceGroupName = util.DEVICE_GROUP_NAME_4;
+        preProdDeviceGroupName = util.getDeviceGroupName(3);
         impCentralApi.deviceGroups.create(productId, DeviceGroups.TYPE_PRE_PRODUCTION, { name : preProdDeviceGroupName }).
             then((res) => {
                 expect(res.data.type).toBe(DeviceGroups.TYPE_PRE_PRODUCTION);
@@ -139,18 +184,40 @@ describe('impCentralAPI.production_device_groups test suite', () => {
             });
     });
 
+    it('should create a pre_dut device group', (done) => {
+        preDutDeviceGroupName = util.getDeviceGroupName(9);
+        impCentralApi.deviceGroups.create(productId, DeviceGroups.TYPE_PRE_DUT, { name : preDutDeviceGroupName }).
+            then((res) => {
+                expect(res.data.type).toBe(DeviceGroups.TYPE_PRE_DUT);
+                expect(res.data.attributes.name).toBe(preDutDeviceGroupName);
+                expect(res.data.relationships.product.id).toBe(productId);
+                preDutDeviceGroupId = res.data.id;
+                done();
+            }).
+            catch((error) => {
+                if (util.noProductionPermissions(error)) {
+                    done();
+                }
+                else {
+                    done.fail(error);
+                }
+            });
+    });
+
     it('should create a pre_factoryfixture device group', (done) => {
         if (preProdDeviceGroupId) {
-            preFFDeviceGroupName = util.DEVICE_GROUP_NAME_5;
+            preFFDeviceGroupName = util.getDeviceGroupName(4);
             impCentralApi.deviceGroups.create(
-                productId, DeviceGroups.TYPE_PRE_FACTORY_FIXTURE, 
+                productId, DeviceGroups.TYPE_PRE_FACTORY_FIXTURE,
                 { name : preFFDeviceGroupName, description : 'test description' },
-                { type : DeviceGroups.TYPE_PRE_PRODUCTION, id : preProdDeviceGroupId }).
+                { type : DeviceGroups.TYPE_PRE_PRODUCTION, id : preProdDeviceGroupId },
+                { type : DeviceGroups.TYPE_PRE_DUT, id : preDutDeviceGroupId }).
                 then((res) => {
                     expect(res.data.type).toBe(DeviceGroups.TYPE_PRE_FACTORY_FIXTURE);
                     expect(res.data.attributes.name).toBe(preFFDeviceGroupName);
                     expect(res.data.relationships.product.id).toBe(productId);
                     expect(res.data.relationships.production_target.id).toBe(preProdDeviceGroupId);
+                    expect(res.data.relationships.dut_target.id).toBe(preDutDeviceGroupId);
                     preFFDeviceGroupId = res.data.id;
                     done();
                 }).
@@ -166,7 +233,7 @@ describe('impCentralAPI.production_device_groups test suite', () => {
     it('should update production device group', (done) => {
         if (prodDeviceGroupId) {
             let descr = 'new test description';
-            prodDeviceGroupName = util.DEVICE_GROUP_NAME_6;
+            prodDeviceGroupName = util.getDeviceGroupName(5);
             impCentralApi.deviceGroups.update(
                 prodDeviceGroupId,
                 DeviceGroups.TYPE_PRODUCTION,
@@ -176,6 +243,29 @@ describe('impCentralAPI.production_device_groups test suite', () => {
                     expect(res.data.attributes.description).toBe(descr);
                     expect(res.data.attributes.name).toBe(prodDeviceGroupName);
                     expect(res.data.attributes.load_code_after_blessing).toBe(false);
+                    done();
+                }).
+                catch((error) => {
+                    done.fail(error);
+                });
+        }
+        else {
+            done();
+        }
+    });
+
+    it('should update dut device group', (done) => {
+        if (dutDeviceGroupId) {
+            let descr = 'new test description';
+            dutDeviceGroupName = util.getDeviceGroupName(10);
+            impCentralApi.deviceGroups.update(
+                dutDeviceGroupId,
+                DeviceGroups.TYPE_DUT,
+                { description : descr, name: dutDeviceGroupName }).
+                then((res) => {
+                    expect(res.data.id).toBe(dutDeviceGroupId);
+                    expect(res.data.attributes.description).toBe(descr);
+                    expect(res.data.attributes.name).toBe(dutDeviceGroupName);
                     done();
                 }).
                 catch((error) => {
@@ -209,20 +299,44 @@ describe('impCentralAPI.production_device_groups test suite', () => {
         }
     });
 
+    it('should not update dut device group with dut_target', (done) => {
+        if (dutDeviceGroupId) {
+            impCentralApi.deviceGroups.update(
+                dutDeviceGroupId,
+                DeviceGroups.TYPE_DUT,
+                null,
+                { type : DeviceGroups.TYPE_PRE_DUT, id : preDutDeviceGroupId }).
+                then((res) => {
+                    done.fail('dut device group successfully updated with dut_target');
+                }).
+                catch((error) => {
+                    if (!(error instanceof Errors.InvalidDataError)) {
+                        done.fail('unexpected error');
+                    }
+                    done();
+                });
+        }
+        else {
+            done();
+        }
+    });
+
     it('should update factoryfixture device group', (done) => {
         if (ffDeviceGroupId) {
             let descr = 'new test description';
-            ffDeviceGroupName = util.DEVICE_GROUP_NAME_7;
+            ffDeviceGroupName = util.getDeviceGroupName(6);
             impCentralApi.deviceGroups.update(
                 ffDeviceGroupId,
                 DeviceGroups.TYPE_FACTORY_FIXTURE,
                 { description : descr, name: ffDeviceGroupName },
-                { type : DeviceGroups.TYPE_PRODUCTION, id : prodDeviceGroupId }).
+                { type : DeviceGroups.TYPE_PRODUCTION, id : prodDeviceGroupId },
+                { type : DeviceGroups.TYPE_DUT, id : dutDeviceGroupId }).
                 then((res) => {
                     expect(res.data.id).toBe(ffDeviceGroupId);
                     expect(res.data.attributes.description).toBe(descr);
                     expect(res.data.attributes.name).toBe(ffDeviceGroupName);
                     expect(res.data.relationships.production_target.id).toBe(prodDeviceGroupId);
+                    expect(res.data.relationships.dut_target.id).toBe(dutDeviceGroupId);
                     done();
                 }).
                 catch((error) => {
@@ -258,7 +372,7 @@ describe('impCentralAPI.production_device_groups test suite', () => {
     it('should update pre_factoryfixture device group', (done) => {
         if (preFFDeviceGroupId) {
             let descr = 'new test description';
-            preFFDeviceGroupName = util.DEVICE_GROUP_NAME_8;
+            preFFDeviceGroupName = util.getDeviceGroupName(7);
             impCentralApi.deviceGroups.update(
                 preFFDeviceGroupId,
                 DeviceGroups.TYPE_PRE_FACTORY_FIXTURE,
@@ -326,6 +440,36 @@ describe('impCentralAPI.production_device_groups test suite', () => {
     it('should delete pre_production device group', (done) => {
         if (preProdDeviceGroupId) {
             impCentralApi.deviceGroups.delete(preProdDeviceGroupId).
+                then((res) => {
+                    done();
+                }).
+                catch((error) => {
+                    done.fail(error);
+                });
+        }
+        else {
+            done();
+        }
+    });
+
+    it('should delete dut device group', (done) => {
+        if (dutDeviceGroupId) {
+            impCentralApi.deviceGroups.delete(dutDeviceGroupId).
+                then((res) => {
+                    done();
+                }).
+                catch((error) => {
+                    done.fail(error);
+                });
+        }
+        else {
+            done();
+        }
+    });
+
+    it('should delete pre_dut device group', (done) => {
+        if (preDutDeviceGroupId) {
+            impCentralApi.deviceGroups.delete(preDutDeviceGroupId).
                 then((res) => {
                     done();
                 }).

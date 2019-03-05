@@ -1,6 +1,6 @@
 // MIT License
 //
-// Copyright 2017 Electric Imp
+// Copyright 2017-2019 Electric Imp
 //
 // SPDX-License-Identifier: MIT
 //
@@ -47,7 +47,7 @@ describe('impCentralAPI.devices test suite', () => {
     beforeAll(util.init, util.TIMEOUT);
 
     it('should create a product', (done) => {
-        productName = util.PRODUCT_NAME;
+        productName = util.getProductName();
         impCentralApi.products.create({name : productName}).
             then((res) => {
                 expect(res.data.type).toBe('product');
@@ -62,7 +62,7 @@ describe('impCentralAPI.devices test suite', () => {
     });
 
     it('should create a device group', (done) => {
-        deviceGroupName = util.DEVICE_GROUP_NAME;
+        deviceGroupName = util.getDeviceGroupName();
         impCentralApi.deviceGroups.create(productId, DeviceGroups.TYPE_DEVELOPMENT, { name : deviceGroupName }).
             then((res) => {
                 deviceGroupId = res.data.id;

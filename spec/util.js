@@ -1,6 +1,6 @@
 // MIT License
 //
-// Copyright 2017 Electric Imp
+// Copyright 2017-2019 Electric Imp
 //
 // SPDX-License-Identifier: MIT
 //
@@ -32,15 +32,26 @@ const Deployments = require('../lib/Deployments');
 
 const TIMEOUT = 20000;
 const PRODUCT_NAME = '__test_product__imp_central_api';
-const PRODUCT_NAME_2 = PRODUCT_NAME + '_2';
 const DEVICE_GROUP_NAME = '__test_device_group__imp_central_api';
-const DEVICE_GROUP_NAME_2 = DEVICE_GROUP_NAME + '_2';
-const DEVICE_GROUP_NAME_3 = DEVICE_GROUP_NAME + '_3';
-const DEVICE_GROUP_NAME_4 = DEVICE_GROUP_NAME + '_4';
-const DEVICE_GROUP_NAME_5 = DEVICE_GROUP_NAME + '_5';
-const DEVICE_GROUP_NAME_6 = DEVICE_GROUP_NAME + '_6';
-const DEVICE_GROUP_NAME_7 = DEVICE_GROUP_NAME + '_7';
-const DEVICE_GROUP_NAME_8 = DEVICE_GROUP_NAME + '_8';
+
+const PRODUCTS = [
+    PRODUCT_NAME,
+    PRODUCT_NAME + '_2'
+];
+const DEVICE_GROUPS = [
+    DEVICE_GROUP_NAME,
+    DEVICE_GROUP_NAME + '_2',
+    DEVICE_GROUP_NAME + '_3',
+    DEVICE_GROUP_NAME + '_4',
+    DEVICE_GROUP_NAME + '_5',
+    DEVICE_GROUP_NAME + '_6',
+    DEVICE_GROUP_NAME + '_7',
+    DEVICE_GROUP_NAME + '_8',
+    DEVICE_GROUP_NAME + '_9',
+    DEVICE_GROUP_NAME + '_10',
+    DEVICE_GROUP_NAME + '_11',
+    DEVICE_GROUP_NAME + '_12'
+];
 
 var impCentralApi = new ImpCentralApi(config.apiEndpoint);
 
@@ -85,11 +96,9 @@ function deleteDeviceGroup(id) {
 function cleanupDeviceGroups() {
     return _listEntities(impCentralApi.deviceGroups, null).
         then((res) => {
-            let devGroupNames = [DEVICE_GROUP_NAME, DEVICE_GROUP_NAME_2, DEVICE_GROUP_NAME_3, DEVICE_GROUP_NAME_4,
-                DEVICE_GROUP_NAME_5, DEVICE_GROUP_NAME_6, DEVICE_GROUP_NAME_7, DEVICE_GROUP_NAME_8];
             let devGroupsIds = [];
             for (let dg of res) {
-                if (devGroupNames.includes(dg.attributes.name)) {
+                if (DEVICE_GROUPS.includes(dg.attributes.name)) {
                     devGroupsIds.push(dg.id);
                 }
             }
@@ -105,10 +114,9 @@ function cleanupDeviceGroups() {
 function cleanupProducts() {
     return _listEntities(impCentralApi.products, null).
         then((res) => {
-            let productNames = [PRODUCT_NAME, PRODUCT_NAME_2];
             let productIds = [];
             for (let product of res) {
-                if (productNames.includes(product.attributes.name)) {
+                if (PRODUCTS.includes(product.attributes.name)) {
                     productIds.push(product.id);
                 }
             }
@@ -141,15 +149,19 @@ module.exports.noProductionPermissions = function(error) {
     return (error instanceof Errors.ImpCentralApiError && error.message.indexOf('Invalid Permission') >= 0);
 }
 
+module.exports.getProductName = function(index = 0) {
+    if (index >= PRODUCTS.length) {
+        throw new Error('Unexpected product name index: ' + index);
+    }
+    return PRODUCTS[index];
+}
+
+module.exports.getDeviceGroupName = function(index = 0) {
+    if (index >= DEVICE_GROUPS.length) {
+        throw new Error('Unexpected device group name index: ' + index);
+    }
+    return DEVICE_GROUPS[index];
+}
+
 module.exports.impCentralApi = impCentralApi;
 module.exports.TIMEOUT = TIMEOUT;
-module.exports.PRODUCT_NAME = PRODUCT_NAME;
-module.exports.PRODUCT_NAME_2 = PRODUCT_NAME_2;
-module.exports.DEVICE_GROUP_NAME = DEVICE_GROUP_NAME;
-module.exports.DEVICE_GROUP_NAME_2 = DEVICE_GROUP_NAME_2;
-module.exports.DEVICE_GROUP_NAME_3 = DEVICE_GROUP_NAME_3;
-module.exports.DEVICE_GROUP_NAME_4 = DEVICE_GROUP_NAME_4;
-module.exports.DEVICE_GROUP_NAME_5 = DEVICE_GROUP_NAME_5;
-module.exports.DEVICE_GROUP_NAME_6 = DEVICE_GROUP_NAME_6;
-module.exports.DEVICE_GROUP_NAME_7 = DEVICE_GROUP_NAME_7;
-module.exports.DEVICE_GROUP_NAME_8 = DEVICE_GROUP_NAME_8;
