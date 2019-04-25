@@ -2,6 +2,8 @@
 
 *imp-central-api* is a JavaScript (Node.js) wrapper for the [impCentral API](https://apidoc.electricimp.com).
 
+![Build Status](https://cse-ci.electricimp.com/app/rest/builds/buildType:(id:ImpCentralApi_BuildAndTest)/statusIcon)
+
 ## Library Usage ##
 
 To use *imp-central-api*, you will need to:
