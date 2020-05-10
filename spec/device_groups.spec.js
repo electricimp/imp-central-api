@@ -1,6 +1,6 @@
 // MIT License
 //
-// Copyright 2017-2019 Electric Imp
+// Copyright 2017-2020 Electric Imp
 //
 // SPDX-License-Identifier: MIT
 //
@@ -65,6 +65,36 @@ describe('impCentralAPI.device_groups test suite', () => {
                 expect(res.data.attributes.name).toBe(deviceGroupName);
                 expect(res.data.relationships.product.id).toBe(productId);
                 deviceGroupId = res.data.id;
+                done();
+            }).
+            catch((error) => {
+                done.fail(error);
+            });
+    });
+
+    it('should create a device group with optional attrs', (done) => {
+        const dgName = util.getDeviceGroupName(1);
+        const descr = 'test description';
+        const envVars = {
+            "dataSourceURL" : "https://example.com/v1",
+            "dataSourceAPIVersion" : 1
+        };
+        impCentralApi.deviceGroups.create(
+            productId,
+            DeviceGroups.TYPE_DEVELOPMENT,
+            {
+                name : dgName,
+                description : descr,
+                env_vars : envVars
+            }).
+            then((res) => {
+                expect(res.data.type).toBe(DeviceGroups.TYPE_DEVELOPMENT);
+                expect(res.data.attributes.name).toBe(dgName);
+                expect(res.data.attributes.description).toBe(descr);
+                expect(res.data.attributes.env_vars).toEqual(envVars);
+                return impCentralApi.deviceGroups.delete(res.data.id);
+            }).
+            then((res) => {
                 done();
             }).
             catch((error) => {
@@ -202,12 +232,24 @@ describe('impCentralAPI.device_groups test suite', () => {
 
     it('should update a specific device group', (done) => {
         let descr = 'test description';
+        const envVars = {
+            "dataSourceURL" : "https://example.com/v2",
+            "dataSourceAPIVersion" : 2
+        };
         deviceGroupName = util.getDeviceGroupName(3);
-        impCentralApi.deviceGroups.update(deviceGroupId, DeviceGroups.TYPE_DEVELOPMENT, { description : descr, name: deviceGroupName }).
+        impCentralApi.deviceGroups.update(
+            deviceGroupId,
+            DeviceGroups.TYPE_DEVELOPMENT, 
+            {
+                description : descr,
+                name : deviceGroupName,
+                env_vars : envVars
+            }).
             then((res) => {
                 expect(res.data.id).toBe(deviceGroupId);
                 expect(res.data.attributes.description).toBe(descr);
                 expect(res.data.attributes.name).toBe(deviceGroupName);
+                expect(res.data.attributes.env_vars).toEqual(envVars);
                 done();
             }).
             catch((error) => {
