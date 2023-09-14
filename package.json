@@ -32,7 +32,7 @@
   },
   "dependencies": {
     "request": "^2.69.0",
-    "eventsource": "^1.0.2",
+    "eventsource": "^2.0.2",
     "hoek": "^6.0.2"
   }
 }
